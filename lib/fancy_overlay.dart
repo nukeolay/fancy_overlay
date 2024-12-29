@@ -1,7 +1,6 @@
 library fancy_overlay;
 
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+export 'package:fancy_overlay/src/fancy_overlay_widget.dart';
+export 'package:fancy_overlay/src/fancy_overlay_controller.dart';
+export 'package:fancy_overlay/src/entries/export.dart';
+export 'package:fancy_overlay/src/tokens/export.dart';
