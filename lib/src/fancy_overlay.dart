@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-abstract class FancyOverlayEntry<T> {
-  const FancyOverlayEntry();
+abstract class FancyOverlay<T> {
+  const FancyOverlay();
   T get config;
   Widget get widget;
 }

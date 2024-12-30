@@ -21,6 +21,16 @@ class HomePage extends StatelessWidget {
                 'VHS Overlay',
               ),
             ),
+            ElevatedButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Snack'),
+                  ),
+                );
+              },
+              child: const Text('Snack'),
+            ),
           ],
         ),
       ),

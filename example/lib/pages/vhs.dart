@@ -3,8 +3,7 @@ import 'package:fancy_overlay/fancy_overlay.dart';
 import 'package:flutter/material.dart';
 
 class VhsPage extends StatefulWidget {
-  const VhsPage({required this.controller, super.key});
-  final FancyOverlayController controller;
+  const VhsPage({super.key});
 
   @override
   State<VhsPage> createState() => _VhsPageState();
@@ -12,33 +11,36 @@ class VhsPage extends StatefulWidget {
 
 class _VhsPageState extends State<VhsPage> {
   VhsOverlayConfig? _config;
-  bool _isInit = true;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final overlay = FancyOverlay.of<VhsOverlayEntry>(context);
-    if (_isInit) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _config = overlay?.config;
-        if (_config != null) return;
-        widget.controller.setOverlay(
-          const VhsOverlayEntry(
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        _config = const VhsOverlayConfig.standard();
+        context.showFancyOverlay(
+          const VhsOverlay(
             config: VhsOverlayConfig.standard(),
           ),
         );
-      });
-      _isInit = false;
-    }
-    _config = overlay?.config;
+        setState(() {});
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    ScrollController;
     return Scaffold(
       appBar: AppBar(
         title: const Text('VHS Overlay'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete_forever_rounded),
+            onPressed: () {
+              context.removeFancyOverlay<VhsOverlay>();
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
@@ -53,9 +55,10 @@ class _VhsPageState extends State<VhsPage> {
                 onChanged: (value) {
                   _config = _config?.copyWith(dotRadius: value);
                   if (_config == null) return;
-                  widget.controller.setOverlay(
-                    VhsOverlayEntry(config: _config!),
+                  context.showFancyOverlay(
+                    VhsOverlay(config: _config!),
                   );
+                  setState(() {});
                 },
               ),
               Text('Dots number (${_config!.dotsNumber})'),
@@ -66,9 +69,10 @@ class _VhsPageState extends State<VhsPage> {
                 onChanged: (value) {
                   _config = _config?.copyWith(dotsNumber: value.toInt());
                   if (_config == null) return;
-                  widget.controller.setOverlay(
-                    VhsOverlayEntry(config: _config!),
+                  context.showFancyOverlay(
+                    VhsOverlay(config: _config!),
                   );
+                  setState(() {});
                 },
               ),
               FancyColorSlider(
@@ -78,9 +82,10 @@ class _VhsPageState extends State<VhsPage> {
                   final updatedColor = _config!.color.copyWith(dot: color);
                   _config = _config?.copyWith(color: updatedColor);
                   if (_config == null) return;
-                  widget.controller.setOverlay(
-                    VhsOverlayEntry(config: _config!),
+                  context.showFancyOverlay(
+                    VhsOverlay(config: _config!),
                   );
+                  setState(() {});
                 },
               ),
             ],

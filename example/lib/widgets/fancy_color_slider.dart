@@ -20,7 +20,7 @@ class FancyColorSlider extends StatelessWidget {
         Text(label),
         Slider(
           value: color.color.red.toDouble(),
-          thumbColor: Color.fromRGBO(color.color.red, 0, 0, 1),
+          thumbColor: Colors.red,
           min: 0,
           max: 256,
           onChanged: (value) {
@@ -39,7 +39,7 @@ class FancyColorSlider extends StatelessWidget {
         ),
         Slider(
           value: color.color.green.toDouble(),
-          thumbColor: Color.fromRGBO(0, color.color.green, 0, 1),
+          thumbColor: Colors.green,
           min: 0,
           max: 256,
           onChanged: (value) {
@@ -58,7 +58,7 @@ class FancyColorSlider extends StatelessWidget {
         ),
         Slider(
           value: color.color.blue.toDouble(),
-          thumbColor: Color.fromRGBO(0, 0, color.color.blue, 1),
+          thumbColor: Colors.blue,
           min: 0,
           max: 256,
           onChanged: (value) {

@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:fancy_overlay/fancy_overlay.dart';
 
-class VhsOverlayEntry extends FancyOverlayEntry<VhsOverlayConfig> {
-  const VhsOverlayEntry({
+class VhsOverlay extends FancyOverlay<VhsOverlayConfig> {
+  const VhsOverlay({
     required this.config,
   });
 
