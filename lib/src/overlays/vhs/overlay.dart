@@ -2,8 +2,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fancy_overlay/fancy_overlay.dart';
 
-class VhsOverlayWidget extends StatefulWidget {
-  const VhsOverlayWidget({
+class VhsOverlay extends StatefulWidget {
+  const VhsOverlay({
     required this.config,
     super.key,
   });
@@ -11,10 +11,10 @@ class VhsOverlayWidget extends StatefulWidget {
   final VhsOverlayConfig config;
 
   @override
-  State<VhsOverlayWidget> createState() => _VhsOverlayWidgetState();
+  State<VhsOverlay> createState() => _VhsOverlayState();
 }
 
-class _VhsOverlayWidgetState extends State<VhsOverlayWidget>
+class _VhsOverlayState extends State<VhsOverlay>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _noiseAnimation;

@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:fancy_overlay/fancy_overlay.dart';
 
 extension FancyOverlayExtension on BuildContext {
   static final Map<Type, OverlayEntry> _overlays = {};
 
-  void showFancyOverlay(FancyOverlay overlay) {
+  void showFancyOverlay(Widget overlay) {
     _removeEntryByType(overlay.runtimeType);
     final overlayEntry = OverlayEntry(
-      builder: (context) => IgnorePointer(
-        child: overlay.widget,
+      builder: (_) => IgnorePointer(
+        child: overlay,
       ),
     );
     _overlays[overlay.runtimeType] = overlayEntry;
     Overlay.of(this).insert(overlayEntry);
   }
 
-  getOverlayConfig<T extends FancyOverlay>() => _overlays[T]?.builder;
-
-  void removeFancyOverlay<T extends FancyOverlay>() {
+  void removeFancyOverlay<T extends Widget>() {
     _removeEntryByType(T);
   }
 
