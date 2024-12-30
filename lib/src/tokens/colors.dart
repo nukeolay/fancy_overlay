@@ -8,12 +8,12 @@ class FancyColor {
 }
 
 class FancyRandomColor implements FancyColor {
-  const FancyRandomColor([this.r, this.g, this.b, this.intensity]);
+  const FancyRandomColor([this.r, this.g, this.b, this.opacity]);
 
   final int? r;
   final int? g;
   final int? b;
-  final double? intensity;
+  final double? opacity;
 
   @override
   Color get color {
@@ -21,7 +21,7 @@ class FancyRandomColor implements FancyColor {
       r ?? Random().nextInt(256),
       g ?? Random().nextInt(256),
       b ?? Random().nextInt(256),
-      intensity ?? Random().nextDouble(),
+      opacity ?? Random().nextDouble(),
     );
   }
 }

@@ -4,15 +4,16 @@ import 'package:example/pages/home.dart';
 import 'package:example/pages/vhs.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const FancyOverlayExample());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class FancyOverlayExample extends StatelessWidget {
+  const FancyOverlayExample({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    Theme.of(context);
+    final controller = FancyOverlayController();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -21,17 +22,15 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       builder: (context, child) => FancyOverlay(
-        controller: FancyOverlayController(
-          builder: (_) => const VhsOverlay(
-            config: VhsOverlayConfig.standard(),
-          ),
-        ),
+        controller: controller,
         child: child!,
       ),
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/vhs':
-            return MaterialPageRoute(builder: (_) => const VhsPage());
+            return MaterialPageRoute(
+              builder: (_) => VhsPage(controller: controller),
+            );
           default:
             return MaterialPageRoute(builder: (_) => const HomePage());
         }

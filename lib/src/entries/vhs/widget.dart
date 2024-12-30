@@ -2,47 +2,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fancy_overlay/fancy_overlay.dart';
 
-class VhsColor {
-  const VhsColor({
-    required this.scanline,
-    required this.dot,
-    required this.filter,
-  });
-
-  const VhsColor.standard()
-      : scanline = const FancyColor(Color.fromRGBO(0, 0, 0, 0.2)),
-        dot = const FancyRandomColor(),
-        filter = null;
-
-  const VhsColor.random()
-      : scanline = const FancyRandomColor(),
-        dot = const FancyRandomColor(),
-        filter = const FancyRandomColor();
-
-  final FancyColor scanline;
-  final FancyColor dot;
-  final FancyColor? filter;
-}
-
-class VhsOverlayConfig {
-  const VhsOverlayConfig({
-    required this.color,
-    this.dotRadius = 1,
-    this.duration = const Duration(milliseconds: 500),
-  });
-
-  const VhsOverlayConfig.standard()
-      : color = const VhsColor.standard(),
-        dotRadius = 1,
-        duration = const Duration(milliseconds: 500);
-
-  final VhsColor color;
-  final Duration duration;
-  final double dotRadius;
-}
-
-class VhsOverlay extends StatefulWidget {
-  const VhsOverlay({
+class VhsOverlayWidget extends StatefulWidget {
+  const VhsOverlayWidget({
     required this.config,
     super.key,
   });
@@ -50,10 +11,10 @@ class VhsOverlay extends StatefulWidget {
   final VhsOverlayConfig config;
 
   @override
-  State<VhsOverlay> createState() => _VhsOverlayState();
+  State<VhsOverlayWidget> createState() => _VhsOverlayWidgetState();
 }
 
-class _VhsOverlayState extends State<VhsOverlay>
+class _VhsOverlayWidgetState extends State<VhsOverlayWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _noiseAnimation;
@@ -63,7 +24,7 @@ class _VhsOverlayState extends State<VhsOverlay>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: widget.config.duration,
+      duration: const Duration(milliseconds: 500),
     )..repeat();
     _noiseAnimation = Tween<double>(begin: 0, end: 1).animate(_controller);
   }
@@ -76,15 +37,19 @@ class _VhsOverlayState extends State<VhsOverlay>
 
   @override
   Widget build(BuildContext context) {
+    Theme.of(context);
     return AnimatedBuilder(
       animation: _noiseAnimation,
       builder: (context, child) {
         return Container(
+          width: double.infinity,
+          height: double.infinity,
           color: widget.config.color.filter?.color,
           child: CustomPaint(
             painter: _VhsPainter(
               noiseValue: _noiseAnimation.value,
               dotRadius: widget.config.dotRadius,
+              dotsNumber: widget.config.dotsNumber,
               color: widget.config.color,
             ),
           ),
@@ -98,11 +63,13 @@ class _VhsPainter extends CustomPainter {
   const _VhsPainter({
     required this.noiseValue,
     required this.dotRadius,
+    required this.dotsNumber,
     required this.color,
   });
 
   final double noiseValue;
   final double dotRadius;
+  final int dotsNumber;
   final VhsColor color;
 
   @override
@@ -117,7 +84,7 @@ class _VhsPainter extends CustomPainter {
 
     // Add random noise with random colors
     final random = Random();
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i <= dotsNumber; i++) {
       final x = random.nextDouble() * size.width;
       final y = random.nextDouble() * size.height;
       paint.color = color.dot.color;

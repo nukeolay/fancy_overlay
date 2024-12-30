@@ -4,19 +4,38 @@ import 'package:fancy_overlay/fancy_overlay.dart';
 class FancyOverlay extends StatefulWidget {
   const FancyOverlay({
     required this.child,
+    this.initialOverlay,
     this.controller,
     super.key,
   });
   final Widget child;
+  final FancyOverlayEntry? initialOverlay;
   final FancyOverlayController? controller;
 
+  static FancyOverlayEntry? of<T extends FancyOverlayEntry>(
+    BuildContext context,
+  ) {
+    final inherited =
+        context.dependOnInheritedWidgetOfExactType<_InheritedFancyOverlay>();
+    assert(inherited != null, 'No FancyOverlay found in BuildContext');
+    return inherited?.overlay is T ? inherited?.overlay as T : null;
+  }
+
+  static FancyOverlayEntry? maybeOf<T extends FancyOverlayEntry>(
+    BuildContext context,
+  ) {
+    final inherited =
+        context.dependOnInheritedWidgetOfExactType<_InheritedFancyOverlay>();
+    return inherited?.overlay is T ? inherited?.overlay as T : null;
+  }
+
   @override
-  State<FancyOverlay> createState() => _FancyOverlayState();
+  State<FancyOverlay> createState() => FancyOverlayState();
 }
 
-class _FancyOverlayState extends State<FancyOverlay>
+class FancyOverlayState extends State<FancyOverlay>
     with TickerProviderStateMixin {
-  OverlayEntry? _overlay;
+  FancyOverlayEntry? _overlay;
   FancyOverlayController? _backupController;
 
   FancyOverlayController get _effectiveFancyOverlayController =>
@@ -25,14 +44,12 @@ class _FancyOverlayState extends State<FancyOverlay>
   @override
   void initState() {
     super.initState();
-    final builder = _effectiveFancyOverlayController.builder;
-    if (builder == null) return;
-    _overlay = OverlayEntry(
-      opaque: false,
-      builder: (context) => IgnorePointer(
-        child: builder(context),
-      ),
-    );
+    _effectiveFancyOverlayController.setOverlay(widget.initialOverlay);
+    _effectiveFancyOverlayController.addListener(() {
+      setState(() {
+        _overlay = _effectiveFancyOverlayController.overlay;
+      });
+    });
   }
 
   @override
@@ -43,18 +60,26 @@ class _FancyOverlayState extends State<FancyOverlay>
 
   @override
   Widget build(BuildContext context) {
-    return FancyOverlayControllerProvider(
-      controller: _effectiveFancyOverlayController,
-      child: Overlay(
-        initialEntries: [
-          OverlayEntry(
-            opaque: true,
-            maintainState: true,
-            builder: (context) => widget.child,
-          ),
-          if (_overlay != null) _overlay!,
+    return _InheritedFancyOverlay(
+      overlay: _overlay,
+      child: Stack(
+        children: [
+          widget.child,
+          if (_overlay != null) IgnorePointer(child: _overlay!.widget),
         ],
       ),
     );
   }
+}
+
+class _InheritedFancyOverlay extends InheritedWidget {
+  const _InheritedFancyOverlay({
+    required this.overlay,
+    required super.child,
+  });
+
+  final FancyOverlayEntry? overlay;
+
+  @override
+  bool updateShouldNotify(_InheritedFancyOverlay old) => overlay != old.overlay;
 }
