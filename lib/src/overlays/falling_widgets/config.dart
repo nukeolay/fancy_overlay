@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 class FallingWidgetsOverlayConfig {
   const FallingWidgetsOverlayConfig({
     required this.children,
-    this.numberOfWidgets = 200,
+    this.numberOfWidgets = 100,
     this.minSpeed = 0.5,
     this.maxSpeed = 2.0,
     this.minSize = 0.25,

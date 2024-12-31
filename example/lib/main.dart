@@ -1,10 +1,16 @@
+import 'dart:async';
+
 import 'package:example/pages/falling_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:example/pages/home.dart';
 import 'package:example/pages/retro_pixel.dart';
 import 'package:example/pages/vhs.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  unawaited(
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge),
+  );
   runApp(const FancyOverlayExample());
 }
 
@@ -35,7 +41,9 @@ class FancyOverlayExample extends StatelessWidget {
               builder: (_) => const FallingWidgetsPage(),
             );
           default:
-            return MaterialPageRoute(builder: (_) => const HomePage());
+            return MaterialPageRoute(
+              builder: (_) => const HomePage(),
+            );
         }
       },
       home: const HomePage(),
