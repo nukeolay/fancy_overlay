@@ -40,13 +40,11 @@ class HomePage extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Snack'),
-                  ),
-                );
+                Navigator.pushNamed(context, '/falling_widgets');
               },
-              child: const Text('Snack'),
+              child: const Text(
+                'FallingWidgets Overlay',
+              ),
             ),
           ],
         ),

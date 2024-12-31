@@ -1,3 +1,4 @@
+import 'package:example/pages/falling_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:example/pages/home.dart';
 import 'package:example/pages/retro_pixel.dart';
@@ -29,6 +30,10 @@ class FancyOverlayExample extends StatelessWidget {
           case '/retro_pixel':
             return MaterialPageRoute(
               builder: (_) => const RetroPixelPage(),
+            );
+          case '/falling_widgets':
+            return MaterialPageRoute(
+              builder: (_) => const FallingWidgetsPage(),
             );
           default:
             return MaterialPageRoute(builder: (_) => const HomePage());

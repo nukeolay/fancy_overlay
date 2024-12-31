@@ -18,9 +18,7 @@ class _RetroPixelPageState extends State<RetroPixelPage> {
       (_) {
         _config = const RetroPixelOverlayConfig();
         context.showFancyOverlay(
-          const RetroPixelOverlay(
-            config: RetroPixelOverlayConfig(),
-          ),
+          RetroPixelOverlay(config: _config!),
         );
         setState(() {});
       },
@@ -31,7 +29,7 @@ class _RetroPixelPageState extends State<RetroPixelPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Retro Pixel Overlay'),
+        title: const Text('RetroPixelOverlay'),
         actions: [
           IconButton(
             icon: const Icon(Icons.delete_forever_rounded),
@@ -42,11 +40,15 @@ class _RetroPixelPageState extends State<RetroPixelPage> {
         ],
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: ListView(
+          padding: const EdgeInsets.symmetric(vertical: 16),
           children: [
             if (_config != null) ...[
-              Text('Pixel size (${_config!.pixelSize.toStringAsFixed(2)})'),
+              Center(
+                child: Text(
+                  'Pixel size (${_config!.pixelSize.toStringAsFixed(2)})',
+                ),
+              ),
               Slider(
                 value: _config!.pixelSize,
                 min: 1,
@@ -60,7 +62,11 @@ class _RetroPixelPageState extends State<RetroPixelPage> {
                   setState(() {});
                 },
               ),
-              Text('Opacity (${_config!.opacity.toStringAsFixed(2)})'),
+              Center(
+                child: Text(
+                  'Opacity (${_config!.opacity.toStringAsFixed(2)})',
+                ),
+              ),
               Slider(
                 value: _config!.opacity,
                 min: 0,
@@ -74,9 +80,11 @@ class _RetroPixelPageState extends State<RetroPixelPage> {
                   setState(() {});
                 },
               ),
-              Text(
-                'Glitch Frequency '
-                '(${_config!.glitchFrequency.toStringAsFixed(3)})',
+              Center(
+                child: Text(
+                  'Glitch Frequency '
+                  '(${_config!.glitchFrequency.toStringAsFixed(3)})',
+                ),
               ),
               Slider(
                 value: _config!.glitchFrequency,

@@ -19,9 +19,7 @@ class _VhsPageState extends State<VhsPage> {
       (_) {
         _config = const VhsOverlayConfig();
         context.showFancyOverlay(
-          const VhsOverlay(
-            config: VhsOverlayConfig(),
-          ),
+          VhsOverlay(config: _config!),
         );
         setState(() {});
       },
@@ -40,7 +38,7 @@ class _VhsPageState extends State<VhsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('VHS Overlay'),
+        title: const Text('VhsOverlay'),
         actions: [
           IconButton(
             icon: const Icon(Icons.delete_forever_rounded),
@@ -51,11 +49,15 @@ class _VhsPageState extends State<VhsPage> {
         ],
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: ListView(
+          padding: const EdgeInsets.symmetric(vertical: 16),
           children: [
             if (_config != null) ...[
-              Text('Dot size (${_config!.dotSize.toStringAsFixed(2)})'),
+              Center(
+                child: Text(
+                  'Dot size (${_config!.dotSize.toStringAsFixed(2)})',
+                ),
+              ),
               Slider(
                 value: _config!.dotSize,
                 min: 0,
@@ -65,7 +67,11 @@ class _VhsPageState extends State<VhsPage> {
                   _updatedConfig(_config);
                 },
               ),
-              Text('Dots number (${_config!.dotsNumber})'),
+              Center(
+                child: Text(
+                  'Dots number (${_config!.dotsNumber})',
+                ),
+              ),
               Slider(
                 value: _config!.dotsNumber.toDouble(),
                 min: 0,
@@ -93,7 +99,11 @@ class _VhsPageState extends State<VhsPage> {
                   _updatedConfig(_config);
                 },
               ),
-              const Text('Animate Scanlines'),
+              const Center(
+                child: Text(
+                  'Animate Scanlines',
+                ),
+              ),
               Switch(
                 value: _config!.animateScanlines,
                 onChanged: (value) {
