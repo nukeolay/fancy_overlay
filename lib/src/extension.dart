@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 extension FancyOverlayExtension on BuildContext {
   static final Map<Type, OverlayEntry> _overlays = {};
 
-  void showFancyOverlay(Widget overlay) {
+  void showFancyOverlay(
+    Widget overlay, {
+    bool ignorePointer = true,
+  }) {
     _removeEntryByType(overlay.runtimeType);
     final overlayEntry = OverlayEntry(
-      builder: (_) => IgnorePointer(
-        child: overlay,
-      ),
+      builder: (_) => ignorePointer ? IgnorePointer(child: overlay) : overlay,
     );
     _overlays[overlay.runtimeType] = overlayEntry;
     Overlay.of(this).insert(overlayEntry);
@@ -16,6 +17,13 @@ extension FancyOverlayExtension on BuildContext {
 
   void removeFancyOverlay<T extends Widget>() {
     _removeEntryByType(T);
+  }
+
+  void removeAllFancyOverlays() {
+    for (var overlayEntry in _overlays.values) {
+      overlayEntry.remove();
+    }
+    _overlays.clear();
   }
 
   void _removeEntryByType(Type type) {

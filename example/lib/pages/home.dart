@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fancy_overlay/fancy_overlay.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -8,6 +9,14 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Fancy Overlay Example'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete_forever_rounded),
+            onPressed: () {
+              context.removeAllFancyOverlays();
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
