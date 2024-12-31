@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 extension FancyOverlayExtension on BuildContext {
-  static final Map<Type, OverlayEntry> _overlays = {};
+  static final _overlays = <Type, OverlayEntry>{};
 
   void showFancyOverlay(
     Widget overlay, {
