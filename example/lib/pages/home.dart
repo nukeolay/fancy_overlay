@@ -23,6 +23,14 @@ class HomePage extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
+                Navigator.pushNamed(context, '/retro_pixel');
+              },
+              child: const Text(
+                'RetroPixel Overlay',
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Snack'),
