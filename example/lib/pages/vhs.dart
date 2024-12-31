@@ -1,6 +1,6 @@
-import 'package:example/widgets/fancy_color_slider.dart';
-import 'package:fancy_overlay/fancy_overlay.dart';
 import 'package:flutter/material.dart';
+import 'package:fancy_overlay/fancy_overlay.dart';
+import 'package:example/widgets/fancy_color_slider.dart';
 
 class VhsPage extends StatefulWidget {
   const VhsPage({super.key});
@@ -17,15 +17,23 @@ class _VhsPageState extends State<VhsPage> {
     super.didChangeDependencies();
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-        _config = const VhsOverlayConfig.standard();
+        _config = const VhsOverlayConfig();
         context.showFancyOverlay(
           const VhsOverlay(
-            config: VhsOverlayConfig.standard(),
+            config: VhsOverlayConfig(),
           ),
         );
         setState(() {});
       },
     );
+  }
+
+  void _updatedConfig(VhsOverlayConfig? config) {
+    if (config == null) return;
+    context.showFancyOverlay(
+      VhsOverlay(config: config),
+    );
+    setState(() {});
   }
 
   @override
@@ -47,18 +55,14 @@ class _VhsPageState extends State<VhsPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (_config != null) ...[
-              Text('Dot radius (${_config!.dotRadius.toStringAsFixed(2)})'),
+              Text('Dot size (${_config!.dotSize.toStringAsFixed(2)})'),
               Slider(
-                value: _config!.dotRadius,
+                value: _config!.dotSize,
                 min: 0,
                 max: 100,
                 onChanged: (value) {
-                  _config = _config?.copyWith(dotRadius: value);
-                  if (_config == null) return;
-                  context.showFancyOverlay(
-                    VhsOverlay(config: _config!),
-                  );
-                  setState(() {});
+                  _config = _config?.copyWith(dotSize: value);
+                  _updatedConfig(_config);
                 },
               ),
               Text('Dots number (${_config!.dotsNumber})'),
@@ -68,11 +72,7 @@ class _VhsPageState extends State<VhsPage> {
                 max: 1000,
                 onChanged: (value) {
                   _config = _config?.copyWith(dotsNumber: value.toInt());
-                  if (_config == null) return;
-                  context.showFancyOverlay(
-                    VhsOverlay(config: _config!),
-                  );
-                  setState(() {});
+                  _updatedConfig(_config);
                 },
               ),
               FancyColorSlider(
@@ -81,13 +81,26 @@ class _VhsPageState extends State<VhsPage> {
                 onColorUpdate: (color) {
                   final updatedColor = _config!.color.copyWith(dot: color);
                   _config = _config?.copyWith(color: updatedColor);
-                  if (_config == null) return;
-                  context.showFancyOverlay(
-                    VhsOverlay(config: _config!),
-                  );
-                  setState(() {});
+                  _updatedConfig(_config);
                 },
               ),
+              FancyColorSlider(
+                label: 'Scanlin color',
+                color: _config!.color.scanline,
+                onColorUpdate: (color) {
+                  final updatedColor = _config!.color.copyWith(scanline: color);
+                  _config = _config?.copyWith(color: updatedColor);
+                  _updatedConfig(_config);
+                },
+              ),
+              const Text('Animate Scanlines'),
+              Switch(
+                value: _config!.animateScanlines,
+                onChanged: (value) {
+                  _config = _config?.copyWith(animateScanlines: value);
+                  _updatedConfig(_config);
+                },
+              )
             ],
           ],
         ),

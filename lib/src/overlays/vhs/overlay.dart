@@ -4,7 +4,7 @@ import 'package:fancy_overlay/fancy_overlay.dart';
 
 class VhsOverlay extends StatefulWidget {
   const VhsOverlay({
-    required this.config,
+    this.config = const VhsOverlayConfig(),
     super.key,
   });
 
@@ -41,17 +41,10 @@ class _VhsOverlayState extends State<VhsOverlay>
     return AnimatedBuilder(
       animation: _noiseAnimation,
       builder: (context, child) {
-        return Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: widget.config.color.filter?.color,
-          child: CustomPaint(
-            painter: _VhsPainter(
-              noiseValue: _noiseAnimation.value,
-              dotRadius: widget.config.dotRadius,
-              dotsNumber: widget.config.dotsNumber,
-              color: widget.config.color,
-            ),
+        return CustomPaint(
+          painter: _VhsPainter(
+            animationValue: _noiseAnimation.value,
+            config: widget.config,
           ),
         );
       },
@@ -61,16 +54,12 @@ class _VhsOverlayState extends State<VhsOverlay>
 
 class _VhsPainter extends CustomPainter {
   const _VhsPainter({
-    required this.noiseValue,
-    required this.dotRadius,
-    required this.dotsNumber,
-    required this.color,
+    required this.animationValue,
+    required this.config,
   });
 
-  final double noiseValue;
-  final double dotRadius;
-  final int dotsNumber;
-  final VhsColor color;
+  final double animationValue;
+  final VhsOverlayConfig config;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -78,24 +67,46 @@ class _VhsPainter extends CustomPainter {
 
     // Add scanlines
     for (double y = 0; y < size.height; y += 4) {
-      paint.color = color.scanline.color;
+      paint.color = config.color.scanline.color;
       canvas.drawRect(Rect.fromLTWH(0, y, size.width, 1), paint);
     }
 
     // Add random noise with random colors
     final random = Random();
-    for (int i = 0; i <= dotsNumber; i++) {
+    for (int i = 0; i <= config.dotsNumber; i++) {
       final x = random.nextDouble() * size.width;
       final y = random.nextDouble() * size.height;
-      paint.color = color.dot.color;
-      canvas.drawCircle(Offset(x, y), dotRadius, paint);
+      paint.color = config.color.dot.color;
+      canvas.drawRect(
+        Rect.fromPoints(
+          Offset(x, y),
+          Offset(x + config.dotSize, y + config.dotSize),
+        ),
+        paint,
+      );
+    }
+    if (config.animateScanlines) {
+      final scanlinesPaint = Paint()..color = config.color.scanline.color;
+      for (double y = 0; y < size.height; y += config.dotSize * 4) {
+        canvas.drawRect(
+          Rect.fromLTWH(
+            0,
+            y + sin(animationValue * pi * 2 + y * 0.1) * 2,
+            size.width,
+            1,
+          ),
+          scanlinesPaint,
+        );
+      }
     }
   }
 
   @override
   bool shouldRepaint(covariant _VhsPainter oldDelegate) {
-    return oldDelegate.noiseValue != noiseValue ||
-        oldDelegate.dotRadius != dotRadius ||
-        oldDelegate.color != color;
+    return oldDelegate.animationValue != animationValue ||
+        oldDelegate.config.dotSize != config.dotSize ||
+        oldDelegate.config.dotsNumber != config.dotsNumber ||
+        oldDelegate.config.animateScanlines != config.animateScanlines ||
+        oldDelegate.config.color != config.color;
   }
 }
