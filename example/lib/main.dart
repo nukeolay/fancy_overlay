@@ -13,12 +13,11 @@ class FancyOverlayExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Theme.of(context);
     return MaterialApp(
       title: 'Fancy Overlay Example',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
-        scaffoldBackgroundColor: Colors.blueGrey,
+        scaffoldBackgroundColor: Colors.blueGrey.shade300,
         useMaterial3: true,
       ),
       onGenerateRoute: (settings) {
