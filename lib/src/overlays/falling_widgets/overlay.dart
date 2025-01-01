@@ -18,6 +18,7 @@ class _FallingWidgetsOverlayState extends State<FallingWidgetsOverlay>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   final _random = Random();
+  late final Size _screenSize;
   List<_FallingWidget>? _fallingWidgets;
 
   @override
@@ -32,9 +33,10 @@ class _FallingWidgetsOverlayState extends State<FallingWidgetsOverlay>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _screenSize = MediaQuery.of(context).size;
     _fallingWidgets = List.generate(
       widget.config.numberOfWidgets,
-      (_) => _createFallingWidget(),
+      (index) => _createFallingWidget(index),
     );
   }
 
@@ -44,22 +46,22 @@ class _FallingWidgetsOverlayState extends State<FallingWidgetsOverlay>
     super.dispose();
   }
 
-  _FallingWidget _createFallingWidget() {
+  _FallingWidget _createFallingWidget(int index) {
     final size = _randomDouble(
       widget.config.minSize,
       widget.config.maxSize,
     );
-    final opacity = _randomDouble(
-      widget.config.minOpacity,
-      widget.config.maxOpacity,
-    );
     final initialX = _randomDouble(
       0,
-      MediaQuery.of(context).size.width,
+      _screenSize.width,
     );
     final initialY = _randomDouble(
-      -MediaQuery.of(context).size.height, // Allow starting off-screen
-      MediaQuery.of(context).size.height,
+      -_screenSize.height, // Allow starting off-screen
+      _screenSize.height,
+    );
+    final speed = _randomDouble(
+      widget.config.minSpeed,
+      widget.config.maxSpeed,
     );
     final widgetIndex = _random.nextInt(
       widget.config.children.length,
@@ -68,18 +70,15 @@ class _FallingWidgetsOverlayState extends State<FallingWidgetsOverlay>
     return _FallingWidget(
       widget: widget.config.children[widgetIndex],
       size: size,
-      opacity: opacity,
+      opacity: widget.config.opacity,
       initialX: initialX,
       initialY: initialY,
       drift: widget.config.drift,
       rotationSpeed: widget.config.rotationSpeed,
       horizontalOffset: widget.config.horizontalOffset,
-      speed: _randomDouble(
-        widget.config.minSpeed,
-        widget.config.maxSpeed,
-      ),
-      screenHeight: MediaQuery.of(context).size.height,
-      screenWidth: MediaQuery.of(context).size.width,
+      speed: speed,
+      screenHeight: _screenSize.height,
+      screenWidth: _screenSize.width,
     );
   }
 
@@ -93,38 +92,43 @@ class _FallingWidgetsOverlayState extends State<FallingWidgetsOverlay>
       clipBehavior: Clip.none,
       color: Colors.transparent,
       surfaceTintColor: Colors.transparent,
-      child: Stack(
-        children: _fallingWidgets?.map(
+      child: FadeTransition(
+        opacity: AlwaysStoppedAnimation(widget.config.opacity),
+        child: AnimatedBuilder(
+          animation: _controller,
+          builder: (context, _) {
+            final displayedWidgets = _fallingWidgets?.where(
               (fallingWidget) {
-                return AnimatedBuilder(
-                  animation: _controller,
-                  builder: (context, _) {
-                    fallingWidget.updatePosition(_controller.value);
-
-                    // Reset the widget if it moves off-screen
-                    if (fallingWidget.y > MediaQuery.of(context).size.height) {
-                      fallingWidget.resetPosition();
-                    }
-
-                    return Positioned(
-                      left: fallingWidget.x,
-                      top: fallingWidget.y,
-                      child: Transform.rotate(
-                        angle: fallingWidget.rotation,
-                        child: Opacity(
-                          opacity: fallingWidget.opacity,
+                return fallingWidget.isOnScreen;
+              },
+            );
+            _fallingWidgets?.forEach((fallingWidget) {
+              // Reset the widget if it moves off-screen
+              if (fallingWidget.isAfterScreen) {
+                fallingWidget.resetPosition();
+              }
+            });
+            return Stack(
+              children: displayedWidgets?.map(
+                    (fallingWidget) {
+                      fallingWidget.updatePosition(_controller.value);
+                      return Positioned(
+                        left: fallingWidget.x,
+                        top: fallingWidget.y,
+                        child: Transform.rotate(
+                          angle: fallingWidget.rotation,
                           child: Transform.scale(
                             scale: fallingWidget.size,
                             child: fallingWidget.widget,
                           ),
                         ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ).toList() ??
-            [],
+                      );
+                    },
+                  ).toList() ??
+                  [],
+            );
+          },
+        ),
       ),
     );
   }
@@ -177,4 +181,8 @@ class _FallingWidget {
     y = -size; // Start just above the screen
     x = initialX; // Reset to the initial horizontal position
   }
+
+  bool get isBeforeScreen => y < -size;
+  bool get isAfterScreen => y >= screenHeight;
+  bool get isOnScreen => !isBeforeScreen && !isAfterScreen;
 }

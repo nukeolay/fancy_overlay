@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 class FallingWidgetsOverlayConfig {
   const FallingWidgetsOverlayConfig({
     required this.children,
-    this.numberOfWidgets = 100,
+    this.numberOfWidgets = 300,
     this.minSpeed = 0.5,
     this.maxSpeed = 2.0,
     this.minSize = 0.25,
@@ -11,8 +11,7 @@ class FallingWidgetsOverlayConfig {
     this.drift = 20.0,
     this.rotationSpeed = 2.0,
     this.horizontalOffset = 0.0,
-    this.minOpacity = 0.2,
-    this.maxOpacity = 0.8,
+    this.opacity = 0.5,
   });
 
   final List<Widget> children;
@@ -24,8 +23,7 @@ class FallingWidgetsOverlayConfig {
   final double drift;
   final double rotationSpeed;
   final double horizontalOffset; // Range: -1.0 to 1.0
-  final double minOpacity;
-  final double maxOpacity;
+  final double opacity; // Range: -1.0 to 1.0
 
   FallingWidgetsOverlayConfig copyWith({
     List<Widget>? children,
@@ -37,8 +35,7 @@ class FallingWidgetsOverlayConfig {
     double? drift,
     double? rotationSpeed,
     double? horizontalOffset,
-    double? minOpacity,
-    double? maxOpacity,
+    double? opacity,
   }) {
     return FallingWidgetsOverlayConfig(
       children: children ?? this.children,
@@ -50,8 +47,7 @@ class FallingWidgetsOverlayConfig {
       drift: drift ?? this.drift,
       rotationSpeed: rotationSpeed ?? this.rotationSpeed,
       horizontalOffset: horizontalOffset ?? this.horizontalOffset,
-      minOpacity: minOpacity ?? this.minOpacity,
-      maxOpacity: maxOpacity ?? this.maxOpacity,
+      opacity: opacity ?? this.opacity,
     );
   }
 }

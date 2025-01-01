@@ -67,7 +67,7 @@ class _FallingWidgetsPageState extends State<FallingWidgetsPage> {
               Slider(
                 value: _config!.numberOfWidgets.toDouble(),
                 min: 1,
-                max: 500,
+                max: 1000,
                 onChanged: (value) {
                   _config = _config?.copyWith(numberOfWidgets: value.toInt());
                   _updatedConfig(_config);
@@ -175,29 +175,15 @@ class _FallingWidgetsPageState extends State<FallingWidgetsPage> {
               ),
               Center(
                 child: Text(
-                  'Min Opacity (${_config!.minOpacity.toStringAsFixed(2)})',
+                  'Opacity (${_config!.opacity.toStringAsFixed(2)})',
                 ),
               ),
               Slider(
-                value: _config!.minOpacity.toDouble(),
+                value: _config!.opacity.toDouble(),
                 min: 0,
                 max: 1,
                 onChanged: (value) {
-                  _config = _config?.copyWith(minOpacity: value);
-                  _updatedConfig(_config);
-                },
-              ),
-              Center(
-                child: Text(
-                  'Max Opacity (${_config!.maxOpacity.toStringAsFixed(2)})',
-                ),
-              ),
-              Slider(
-                value: _config!.maxOpacity.toDouble(),
-                min: 0,
-                max: 1,
-                onChanged: (value) {
-                  _config = _config?.copyWith(maxOpacity: value);
+                  _config = _config?.copyWith(opacity: value);
                   _updatedConfig(_config);
                 },
               ),
