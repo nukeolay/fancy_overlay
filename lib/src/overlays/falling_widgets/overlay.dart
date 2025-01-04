@@ -11,28 +11,6 @@ import 'package:fancy_overlay/src/overlays/falling_widgets/falling_widgets.dart'
 /// This widget is useful for creating dynamic visual effects, such as falling
 /// snowflakes, stars, or any custom widgets you provide.
 ///
-/// Example usage:
-/// ```dart
-/// FallingWidgetsOverlayConfig(
-///   children: [
-///     Icon(
-///       CupertinoIcons.snow,
-///       color: Colors.white,
-///     ),
-///   ],
-///   numberOfWidgets: 100,
-///   minYSpeed: 0.5,
-///   maxYSpeed: 1.5,
-///   minXSpeed: -0.2,
-///   maxXSpeed: 0.2,
-///   minScale: 0.5,
-///   maxScale: 2.0,
-///   rotationSpeed: 0.3,
-///   appearDuration: const Duration(seconds: 3),
-///   opacity: 0.75,
-/// );
-/// ```
-///
 /// To use this widget, ensure that you provide a valid [FallingWidgetsOverlayConfig]
 /// instance with the desired properties.
 class FallingWidgetsOverlay extends StatelessWidget {
