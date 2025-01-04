@@ -1,13 +1,40 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:fancy_overlay/fancy_overlay.dart';
 
+/// A widget that simulates a VHS-style screen effect overlay.
+///
+/// The [VhsOverlay] replicates the aesthetic of old VHS recordings by introducing
+/// scanlines, random dots (simulating noise), and optional animations for scanlines.
+/// It can be used to add a nostalgic, vintage look to your application.
+///
+/// Example usage:
+/// ```dart
+/// VhsOverlay(
+///   config: VhsOverlayConfig(
+///     scanlineColor: FancyColor(Color.fromRGBO(255, 255, 255, 0.1)),
+///     dotColor: FancyRandomColor(),
+///     dotSize: 1.5,
+///     dotsNumber: 500,
+///     animateScanlines: true,
+///   ),
+/// );
+/// ```
+///
+/// See [VhsOverlayConfig] for a detailed explanation of configuration options.
 class VhsOverlay extends StatefulWidget {
+  /// Creates a [VhsOverlay] with the provided configuration.
+  ///
+  /// The [config] parameter is required and specifies the behavior and appearance
+  /// of the overlay.
   const VhsOverlay({
     this.config = const VhsOverlayConfig(),
     super.key,
   });
 
+  /// The configuration that determines the behavior and appearance of the
+  /// overlay.
   final VhsOverlayConfig config;
 
   @override

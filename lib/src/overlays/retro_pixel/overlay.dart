@@ -28,11 +28,17 @@ import 'package:fancy_overlay/fancy_overlay.dart';
 ///
 /// See [RetroPixelOverlayConfig] for a detailed explanation of configuration options.
 class RetroPixelOverlay extends StatefulWidget {
+  /// Creates a [RetroPixelOverlay] with the provided configuration.
+  ///
+  /// The [config] parameter is required and specifies the behavior and appearance
+  /// of the overlay.
   const RetroPixelOverlay({
     this.config = const RetroPixelOverlayConfig(),
     super.key,
   });
 
+  /// The configuration that determines the behavior and appearance of the
+  /// overlay.
   final RetroPixelOverlayConfig config;
 
   @override
