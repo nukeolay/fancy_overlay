@@ -59,7 +59,7 @@ class FallingWidgetsOverlayConfig {
   final List<Widget> children;
 
   /// The number of widgets to display on the screen simultaneously.
-  /// Defaults to 200.
+  /// Defaults to `200`.
   final int numberOfWidgets;
 
   /// The initial position of the new widget.
@@ -67,42 +67,42 @@ class FallingWidgetsOverlayConfig {
   final FallingWidgetPositionStrategy positionStrategy;
 
   /// The minimum vertical falling speed of the widgets.
-  /// Defaults to 0.5.
+  /// Defaults to `0.5`.
   final double minYSpeed;
 
   /// The maximum vertical falling speed of the widgets.
-  /// Defaults to 1.0.
+  /// Defaults to `1.0`.
   final double maxYSpeed;
 
   /// The minimum horizontal movement speed of the widgets.
-  /// This allows widgets to drift left or right. Defaults to 0 (no movement).
+  /// This allows widgets to drift left or right. Defaults to `0` (no movement).
   final double minXSpeed;
 
   /// The maximum horizontal movement speed of the widgets.
-  /// This allows widgets to drift left or right. Defaults to 0 (no movement).
+  /// This allows widgets to drift left or right. Defaults to `0` (no movement).
   final double maxXSpeed;
 
   /// The minimum scale factor for resizing widgets.
   /// Widgets will randomly scale between [minScale] and [maxScale].
-  /// Defaults to 0.25.
+  /// Defaults to `0.25`.
   final double minScale;
 
   /// The maximum scale factor for resizing widgets.
   /// Widgets will randomly scale between [minScale] and [maxScale].
-  /// Defaults to 1.5.
+  /// Defaults to `1.5`.
   final double maxScale;
 
   /// The rotation speed of the widgets, controlling how fast they spin.
-  /// Defaults to 0.5.
+  /// Defaults to `0.5`.
   final double rotationSpeed;
 
   /// The duration for newly appearing widgets to fade into view.
-  /// Defaults to 2 seconds.
+  /// Defaults to `2` seconds.
   final Duration appearDuration;
 
   /// The global opacity of the widgets, controlling their transparency.
-  /// Values must be between 0.0 (completely transparent) and 1.0 (fully opaque).
-  /// Defaults to 0.5.
+  /// Values must be between `0.0` (completely transparent) and `1.0` (fully opaque).
+  /// Defaults to `0.5`.
   final double opacity;
 
   /// Returns a new configuration with updated values.

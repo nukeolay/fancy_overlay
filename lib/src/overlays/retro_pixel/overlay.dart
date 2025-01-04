@@ -3,6 +3,30 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fancy_overlay/fancy_overlay.dart';
 
+/// A widget that renders a retro-style pixelated overlay effect.
+///
+/// The [RetroPixelOverlay] simulates a vintage pixelated screen with optional
+/// glitch effects, configurable pixel size, opacity, and color palette. It can be
+/// used to add a retro or nostalgic aesthetic to your application.
+///
+/// Example usage:
+/// ```dart
+/// RetroPixelOverlay(
+///   config: RetroPixelOverlayConfig(
+///     pixelSize: 10.0,
+///     opacity: 0.1,
+///     glitchFrequency: 0.02,
+///       colorPalette: [
+///         Color(0xFF00FF00),
+///         Color(0xFF0000FF),
+///         Color(0xFFFF0000),
+///         Color(0xFFFFFF00),
+///       ],
+///     ),
+/// );
+/// ```
+///
+/// See [RetroPixelOverlayConfig] for a detailed explanation of configuration options.
 class RetroPixelOverlay extends StatefulWidget {
   const RetroPixelOverlay({
     this.config = const RetroPixelOverlayConfig(),
@@ -18,7 +42,6 @@ class RetroPixelOverlay extends StatefulWidget {
 class _RetroPixelOverlayState extends State<RetroPixelOverlay>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _animation;
 
   @override
   void initState() {
@@ -27,7 +50,6 @@ class _RetroPixelOverlayState extends State<RetroPixelOverlay>
       vsync: this,
       duration: const Duration(seconds: 1),
     )..repeat(reverse: true);
-    _animation = Tween<double>(begin: 0, end: 1).animate(_controller);
   }
 
   @override
@@ -39,12 +61,12 @@ class _RetroPixelOverlayState extends State<RetroPixelOverlay>
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: _animation,
+      animation: _controller,
       builder: (context, child) {
         return CustomPaint(
           painter: _RetroPixelationPainter(
             config: widget.config,
-            animationValue: _animation.value,
+            animationValue: _controller.value,
           ),
           size: MediaQuery.of(context).size,
         );
