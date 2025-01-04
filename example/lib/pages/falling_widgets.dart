@@ -208,6 +208,24 @@ class _FallingWidgetsPageState extends State<FallingWidgetsPage> {
                   _updatedConfig(_config);
                 },
               ),
+              Center(
+                child: Text(
+                  '${_config!.positionStrategy.runtimeType}',
+                ),
+              ),
+              Switch(
+                value: _config!.positionStrategy
+                    is FallingWidgetTopPositionStrategy,
+                onChanged: (value) {
+                  _config = _config?.copyWith(
+                    positionStrategy: _config!.positionStrategy
+                            is FallingWidgetTopPositionStrategy
+                        ? const FallingWidgetRandomPositionStrategy()
+                        : const FallingWidgetTopPositionStrategy(),
+                  );
+                  _updatedConfig(_config);
+                },
+              ),
             ],
           ],
         ),

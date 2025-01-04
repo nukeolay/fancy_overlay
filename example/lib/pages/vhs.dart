@@ -110,7 +110,7 @@ class _VhsPageState extends State<VhsPage> {
                   _config = _config?.copyWith(animateScanlines: value);
                   _updatedConfig(_config);
                 },
-              )
+              ),
             ],
           ],
         ),

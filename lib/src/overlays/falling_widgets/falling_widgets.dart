@@ -1,4 +1,3 @@
-
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/material.dart';
 import 'package:fancy_overlay/fancy_overlay.dart';
@@ -29,7 +28,7 @@ class _FallingWidgetsState extends State<FallingWidgets>
         _fallingWidgets.addAll(
           List.generate(
             offScreenWidgets,
-            (_) => FallingModel.fromTopSide(
+            (_) => FallingModel(
               config: widget.config,
               screenSize: _screenSize,
             ),
@@ -51,7 +50,9 @@ class _FallingWidgetsState extends State<FallingWidgets>
     _fallingWidgets = List.generate(
       widget.config.numberOfWidgets,
       (_) => FallingModel(
-        config: widget.config,
+        config: widget.config.copyWith(
+          positionStrategy: const FallingWidgetRandomPositionStrategy(),
+        ),
         screenSize: _screenSize,
       ),
     );

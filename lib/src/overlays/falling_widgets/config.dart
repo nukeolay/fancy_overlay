@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:fancy_overlay/src/utils/random_double.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fancy_overlay/fancy_overlay.dart';
 
@@ -17,6 +20,7 @@ import 'package:fancy_overlay/fancy_overlay.dart';
 ///     ),
 ///   ],
 ///   numberOfWidgets: 100,
+///   positionStrategy = const FallingWidgetRandomPositionStrategy()
 ///   minYSpeed: 0.5,
 ///   maxYSpeed: 1.5,
 ///   minXSpeed: -0.2,
@@ -38,6 +42,7 @@ class FallingWidgetsOverlayConfig {
   const FallingWidgetsOverlayConfig({
     required this.children,
     this.numberOfWidgets = 200,
+    this.positionStrategy = const FallingWidgetRandomPositionStrategy(),
     this.minYSpeed = 0.5,
     this.maxYSpeed = 1.0,
     this.minXSpeed = 0,
@@ -56,6 +61,10 @@ class FallingWidgetsOverlayConfig {
   /// The number of widgets to display on the screen simultaneously.
   /// Defaults to 200.
   final int numberOfWidgets;
+
+  /// The initial position of the new widget.
+  /// Defaults to [FallingWidgetRandomPositionStrategy].
+  final FallingWidgetPositionStrategy positionStrategy;
 
   /// The minimum vertical falling speed of the widgets.
   /// Defaults to 0.5.
@@ -103,6 +112,7 @@ class FallingWidgetsOverlayConfig {
   FallingWidgetsOverlayConfig copyWith({
     List<Widget>? children,
     int? numberOfWidgets,
+    FallingWidgetPositionStrategy? positionStrategy,
     double? minYSpeed,
     double? maxYSpeed,
     double? minXSpeed,
@@ -116,6 +126,7 @@ class FallingWidgetsOverlayConfig {
     return FallingWidgetsOverlayConfig(
       children: children ?? this.children,
       numberOfWidgets: numberOfWidgets ?? this.numberOfWidgets,
+      positionStrategy: positionStrategy ?? this.positionStrategy,
       minYSpeed: minYSpeed ?? this.minYSpeed,
       maxYSpeed: maxYSpeed ?? this.maxYSpeed,
       minXSpeed: minXSpeed ?? this.minXSpeed,
@@ -127,4 +138,69 @@ class FallingWidgetsOverlayConfig {
       opacity: opacity ?? this.opacity,
     );
   }
+}
+
+/// An abstract base class that defines the initial position of a falling widget.
+///
+/// This class is used to calculate the starting (x, y) coordinates of a widget
+/// relative to the screen size. It allows customization of how and where widgets
+/// appear on the screen.
+///
+/// Implementations of this class can define different strategies for initializing
+/// widget positions. For example:
+/// - Random positions across the screen.
+/// - Starting at the top of the screen.
+///
+/// See the following implementations for specific behavior:
+/// - [FallingWidgetRandomPositionStrategy]
+/// - [FallingWidgetToPositionStrategy]
+sealed class FallingWidgetPositionStrategy {
+  /// Creates a base instance of the initial position class.
+  const FallingWidgetPositionStrategy();
+
+  /// Calculates the initial horizontal position (x-coordinate) of a widget.
+  ///
+  /// [screenSize] provides the dimensions of the screen where the widget will
+  /// be displayed.
+  double x(Size screenSize);
+
+  /// Calculates the initial vertical position (y-coordinate) of a widget.
+  ///
+  /// [screenSize] provides the dimensions of the screen where the widget will
+  /// be displayed.
+  double y(Size screenSize);
+}
+
+/// A strategy for initializing widget positions at random locations on the screen.
+///
+/// Widgets will appear at a random (x, y) coordinate within the screen bounds.
+class FallingWidgetRandomPositionStrategy
+    extends FallingWidgetPositionStrategy {
+  /// Creates an instance of [FallingWidgetRandomPositionStrategy].
+  const FallingWidgetRandomPositionStrategy();
+
+  /// Returns a random horizontal position (x-coordinate) within the screen width.
+  @override
+  double x(Size screenSize) => Random().randomDouble(0, screenSize.width);
+
+  /// Returns a random vertical position (y-coordinate) within the screen height.
+  @override
+  double y(Size screenSize) => Random().randomDouble(0, screenSize.height);
+}
+
+/// A strategy for initializing widget positions at the top of the screen.
+///
+/// Widgets will appear at a random horizontal position (x-coordinate) but always
+/// start at the top of the screen (y = 0).
+class FallingWidgetTopPositionStrategy extends FallingWidgetPositionStrategy {
+  /// Creates an instance of [FallingWidgetTopPositionStrategy].
+  const FallingWidgetTopPositionStrategy();
+
+  /// Returns a random horizontal position (x-coordinate) within the screen width.
+  @override
+  double x(Size screenSize) => Random().randomDouble(0, screenSize.width);
+
+  /// Returns a vertical position (y-coordinate) fixed at the top of the screen (y = 0).
+  @override
+  double y(Size screenSize) => 0;
 }

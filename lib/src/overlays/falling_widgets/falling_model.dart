@@ -1,8 +1,8 @@
 import 'dart:math';
 
+import 'package:flutter/widgets.dart';
 import 'package:fancy_overlay/fancy_overlay.dart';
 import 'package:fancy_overlay/src/utils/random_double.dart';
-import 'package:flutter/widgets.dart';
 
 final _random = Random();
 
@@ -10,6 +10,7 @@ class FallingModel {
   FallingModel._({
     required this.key,
     required this.widget,
+    required this.initialPosition,
     required this.x,
     required this.y,
     required this.scale,
@@ -24,8 +25,6 @@ class FallingModel {
   factory FallingModel({
     required FallingWidgetsOverlayConfig config,
     required Size screenSize,
-    double? x,
-    double? y,
   }) {
     final size = _random.randomDouble(
       config.minScale,
@@ -46,8 +45,9 @@ class FallingModel {
     return FallingModel._(
       key: UniqueKey(),
       widget: config.children[widgetIndex],
-      x: x ?? _random.randomDouble(0, screenSize.width),
-      y: y ?? _random.randomDouble(0, screenSize.height),
+      initialPosition: config.positionStrategy,
+      x: config.positionStrategy.x(screenSize),
+      y: config.positionStrategy.y(screenSize),
       scale: size,
       opacity: config.opacity,
       rotationSpeed: config.rotationSpeed,
@@ -58,20 +58,9 @@ class FallingModel {
     );
   }
 
-  factory FallingModel.fromTopSide({
-    required FallingWidgetsOverlayConfig config,
-    required Size screenSize,
-  }) {
-    return FallingModel(
-      config: config,
-      screenSize: screenSize,
-      x: Random().randomDouble(0, screenSize.width),
-      y: 0,
-    );
-  }
-
   final Key key;
   final Widget widget;
+  final FallingWidgetPositionStrategy initialPosition;
   final double scale;
   final double opacity;
   final double rotationSpeed;
@@ -80,8 +69,8 @@ class FallingModel {
   final double screenHeight;
   final double screenWidth;
 
-  late double x;
-  late double y;
+  double x;
+  double y;
   double rotation = 0.0;
 
   void updatePosition() {
