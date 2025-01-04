@@ -1,16 +1,13 @@
-import 'dart:async';
-
-import 'package:example/pages/falling_widgets.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:example/pages/home.dart';
-import 'package:example/pages/retro_pixel.dart';
 import 'package:example/pages/vhs.dart';
-import 'package:flutter/services.dart';
+import 'package:example/pages/retro_pixel.dart';
+import 'package:example/pages/falling_widgets.dart';
 
-void main() {
-  unawaited(
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge),
-  );
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   runApp(const FancyOverlayExample());
 }
 
