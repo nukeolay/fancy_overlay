@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:fancy_overlay/src/utils/random_double.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fancy_overlay/src/utils/random_double.dart';
 import 'package:fancy_overlay/fancy_overlay.dart';
 
 /// Configuration class for the [FallingWidgetsOverlay] effect.

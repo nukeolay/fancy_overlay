@@ -67,7 +67,7 @@ class _VhsPainter extends CustomPainter {
 
     // Add scanlines
     for (double y = 0; y < size.height; y += 4) {
-      paint.color = config.color.scanline.color;
+      paint.color = config.scanlineColor.color;
       canvas.drawRect(Rect.fromLTWH(0, y, size.width, 1), paint);
     }
 
@@ -76,7 +76,7 @@ class _VhsPainter extends CustomPainter {
     for (int i = 0; i <= config.dotsNumber; i++) {
       final x = random.nextDouble() * size.width;
       final y = random.nextDouble() * size.height;
-      paint.color = config.color.dot.color;
+      paint.color = config.dotColor.color;
       canvas.drawRect(
         Rect.fromPoints(
           Offset(x, y),
@@ -86,7 +86,7 @@ class _VhsPainter extends CustomPainter {
       );
     }
     if (config.animateScanlines) {
-      final scanlinesPaint = Paint()..color = config.color.scanline.color;
+      final scanlinesPaint = Paint()..color = config.scanlineColor.color;
       for (double y = 0; y < size.height; y += config.dotSize * 4) {
         canvas.drawRect(
           Rect.fromLTWH(
@@ -107,6 +107,7 @@ class _VhsPainter extends CustomPainter {
         oldDelegate.config.dotSize != config.dotSize ||
         oldDelegate.config.dotsNumber != config.dotsNumber ||
         oldDelegate.config.animateScanlines != config.animateScanlines ||
-        oldDelegate.config.color != config.color;
+        oldDelegate.config.scanlineColor != config.scanlineColor || 
+        oldDelegate.config.dotColor != config.dotColor;
   }
 }

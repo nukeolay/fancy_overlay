@@ -83,19 +83,17 @@ class _VhsPageState extends State<VhsPage> {
               ),
               FancyColorSlider(
                 label: 'Dot color',
-                color: _config!.color.dot,
+                color: _config!.dotColor,
                 onColorUpdate: (color) {
-                  final updatedColor = _config!.color.copyWith(dot: color);
-                  _config = _config?.copyWith(color: updatedColor);
+                  _config = _config?.copyWith(dotColor: color);
                   _updatedConfig(_config);
                 },
               ),
               FancyColorSlider(
-                label: 'Scanlin color',
-                color: _config!.color.scanline,
+                label: 'Scanline color',
+                color: _config!.scanlineColor,
                 onColorUpdate: (color) {
-                  final updatedColor = _config!.color.copyWith(scanline: color);
-                  _config = _config?.copyWith(color: updatedColor);
+                  _config = _config?.copyWith(scanlineColor: color);
                   _updatedConfig(_config);
                 },
               ),
