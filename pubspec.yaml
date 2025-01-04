@@ -1,7 +1,8 @@
 name: fancy_overlay
-description: "A new Flutter package project."
+description: "A Flutter package that provides a collection of stunning, 
+customizable overlays to enhance your app's visual appeal."
 version: 0.0.1
-homepage:
+homepage: https://github.com/nukeolay/fancy_overlay/tree/main
 
 environment:
   sdk: ^3.5.3

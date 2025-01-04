@@ -17,7 +17,6 @@ class FallingModel {
     required this.rotationSpeed,
     required this.xSpeed,
     required this.ySpeed,
-    required this.horizontalOffset,
     required this.screenHeight,
     required this.screenWidth,
   });
@@ -52,7 +51,6 @@ class FallingModel {
       scale: size,
       opacity: config.opacity,
       rotationSpeed: config.rotationSpeed,
-      horizontalOffset: config.horizontalOffset,
       ySpeed: ySpeed,
       xSpeed: xSpeed,
       screenHeight: screenSize.height,
@@ -79,7 +77,6 @@ class FallingModel {
   final double rotationSpeed;
   final double xSpeed;
   final double ySpeed;
-  final double horizontalOffset;
   final double screenHeight;
   final double screenWidth;
 
@@ -89,7 +86,7 @@ class FallingModel {
 
   void updatePosition() {
     y += ySpeed;
-    x = x + xSpeed + horizontalOffset * screenWidth / 2;
+    x += xSpeed;
     rotation += rotationSpeed / 60.0;
   }
 

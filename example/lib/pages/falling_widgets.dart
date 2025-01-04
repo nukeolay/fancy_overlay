@@ -179,21 +179,6 @@ class _FallingWidgetsPageState extends State<FallingWidgetsPage> {
               ),
               Center(
                 child: Text(
-                  'Horizontal Offset '
-                  '(${_config!.horizontalOffset.toStringAsFixed(2)})',
-                ),
-              ),
-              Slider(
-                value: _config!.horizontalOffset.toDouble(),
-                min: -1,
-                max: 1,
-                onChanged: (value) {
-                  _config = _config?.copyWith(horizontalOffset: value);
-                  _updatedConfig(_config);
-                },
-              ),
-              Center(
-                child: Text(
                   'Opacity (${_config!.opacity.toStringAsFixed(2)})',
                 ),
               ),

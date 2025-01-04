@@ -1,5 +1,5 @@
-import 'package:fancy_overlay/fancy_overlay.dart';
 import 'package:flutter/material.dart';
+import 'package:fancy_overlay/fancy_overlay.dart';
 
 class FancyColorSlider extends StatelessWidget {
   const FancyColorSlider({
