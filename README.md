@@ -26,13 +26,6 @@ Flutter package that provides a collection of stunning, customizable overlays to
   - Easily add, remove, and manage overlays with with `showFancyOverlay` and `removeFancyOverlay` *BuildContext* extensions.
   - Support for multiple simultaneous overlays without conflicts.
 
-Configure overlays to fit your app's style with options for colors, sizes, animations, and effects.
-Tailor-made overlays for unique, immersive experiences.
-Extensible Design
-
-New overlays can be added effortlessly to the package.
-Future updates will include even more creative effects to make your app stand out.
-
 ## Install
 
 In the `pubspec.yaml` of your flutter project, add the following dependency:
