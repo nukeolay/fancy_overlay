@@ -25,6 +25,14 @@ class _RetroPixelPageState extends State<RetroPixelPage> {
     );
   }
 
+  void _updatedConfig(RetroPixelOverlayConfig? config) {
+    if (config == null) return;
+    context.showFancyOverlay(
+      RetroPixelOverlay(config: config),
+    );
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,11 +63,7 @@ class _RetroPixelPageState extends State<RetroPixelPage> {
                 max: 100,
                 onChanged: (value) {
                   _config = _config?.copyWith(pixelSize: value);
-                  if (_config == null) return;
-                  context.showFancyOverlay(
-                    RetroPixelOverlay(config: _config!),
-                  );
-                  setState(() {});
+                  _updatedConfig(_config);
                 },
               ),
               Center(
@@ -73,11 +77,7 @@ class _RetroPixelPageState extends State<RetroPixelPage> {
                 max: 1,
                 onChanged: (value) {
                   _config = _config?.copyWith(opacity: value);
-                  if (_config == null) return;
-                  context.showFancyOverlay(
-                    RetroPixelOverlay(config: _config!),
-                  );
-                  setState(() {});
+                  _updatedConfig(_config);
                 },
               ),
               Center(
@@ -92,11 +92,7 @@ class _RetroPixelPageState extends State<RetroPixelPage> {
                 max: 1,
                 onChanged: (value) {
                   _config = _config?.copyWith(glitchFrequency: value);
-                  if (_config == null) return;
-                  context.showFancyOverlay(
-                    RetroPixelOverlay(config: _config!),
-                  );
-                  setState(() {});
+                  _updatedConfig(_config);
                 },
               ),
             ],
