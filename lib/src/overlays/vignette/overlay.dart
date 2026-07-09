@@ -1,12 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:fancy_overlay/fancy_overlay.dart';
 
+/// A widget that adds a dark vignette and optional sepia tint over the screen.
+///
+/// The [VignetteOverlay] draws a blurred inset shadow around the screen edges
+/// and applies a sepia color filter to the content behind it. It can be used to
+/// give the application a warmer, cinematic, or aged-photo look.
+///
+/// Example usage:
+/// ```dart
+/// VignetteOverlay(
+///   config: VignetteOverlayConfig(
+///     intensity: 0.8,
+///     sepiaStrength: 0.1,
+///     radius: 2,
+///     edgeFalloff: 2,
+///   ),
+/// );
+/// ```
+///
+/// See [VignetteOverlayConfig] for a detailed explanation of configuration
+/// options.
 class VignetteOverlay extends StatelessWidget {
+  /// Creates a [VignetteOverlay] with the provided configuration.
   const VignetteOverlay({
     this.config = const VignetteOverlayConfig(),
     super.key,
   });
 
+  /// The configuration that determines the appearance of the vignette effect.
   final VignetteOverlayConfig config;
 
   @override
