@@ -32,10 +32,18 @@ class HomePage extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/retro_pixel');
+                Navigator.pushNamed(context, '/pixel_noise');
               },
               child: const Text(
-                'RetroPixel Overlay',
+                'PixelNoise Overlay',
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/pixelize');
+              },
+              child: const Text(
+                'Pixelize Overlay',
               ),
             ),
             ElevatedButton(
