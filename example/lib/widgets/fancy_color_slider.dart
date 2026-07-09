@@ -19,7 +19,7 @@ class FancyColorSlider extends StatelessWidget {
       children: [
         Text(label),
         Slider(
-          value: color.color.red.toDouble(),
+          value: _colorChannelValue(color.color.r).toDouble(),
           thumbColor: Colors.red,
           min: 0,
           max: 256,
@@ -30,15 +30,15 @@ class FancyColorSlider extends StatelessWidget {
             }
             final updatedColor = Color.fromRGBO(
               value.toInt(),
-              color.color.green,
-              color.color.blue,
-              color.color.opacity,
+              _colorChannelValue(color.color.g),
+              _colorChannelValue(color.color.b),
+              color.color.a,
             );
             onColorUpdate(FancyColor(updatedColor));
           },
         ),
         Slider(
-          value: color.color.green.toDouble(),
+          value: _colorChannelValue(color.color.g).toDouble(),
           thumbColor: Colors.green,
           min: 0,
           max: 256,
@@ -48,16 +48,16 @@ class FancyColorSlider extends StatelessWidget {
               return;
             }
             final updatedColor = Color.fromRGBO(
-              color.color.red,
+              _colorChannelValue(color.color.r),
               value.toInt(),
-              color.color.blue,
-              color.color.opacity,
+              _colorChannelValue(color.color.b),
+              color.color.a,
             );
             onColorUpdate(FancyColor(updatedColor));
           },
         ),
         Slider(
-          value: color.color.blue.toDouble(),
+          value: _colorChannelValue(color.color.b).toDouble(),
           thumbColor: Colors.blue,
           min: 0,
           max: 256,
@@ -67,10 +67,10 @@ class FancyColorSlider extends StatelessWidget {
               return;
             }
             final updatedColor = Color.fromRGBO(
-              color.color.red,
-              color.color.green,
+              _colorChannelValue(color.color.r),
+              _colorChannelValue(color.color.g),
               value.toInt(),
-              color.color.opacity,
+              color.color.a,
             );
             onColorUpdate(FancyColor(updatedColor));
           },
@@ -78,4 +78,8 @@ class FancyColorSlider extends StatelessWidget {
       ],
     );
   }
+}
+
+int _colorChannelValue(double channel) {
+  return (channel * 255).round().clamp(0, 255).toInt();
 }

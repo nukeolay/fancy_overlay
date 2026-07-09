@@ -1,6 +1,6 @@
 # fancy_overlay
 
-Flutter package that provides a collection of stunning, customizable overlays to enhance your app's visual appeal. With a convenient API for adding overlays, it includes effects like VHS glitch, retro pixelation, falling widgets, and more. Designed for flexibility, the package allows for unique configurations and supports easy expansion with new overlays in the future.
+Flutter package that provides a collection of stunning, customizable overlays to enhance your app's visual appeal. With a convenient API for adding overlays, it includes effects like VHS glitch, retro pixelation, falling widgets, vignette, and more. Designed for flexibility, the package allows for unique configurations and supports easy expansion with new overlays in the future.
 
 ## Features
 
@@ -22,8 +22,14 @@ Flutter package that provides a collection of stunning, customizable overlays to
   
     <img src="https://raw.githubusercontent.com/nukeolay/fancy_overlay/main/example/retro_pixels.gif" alt="Retro Pixels" width="200"/>&nbsp;
 
+* VignetteOverlay()
+  - Add a soft perimeter vignette with configurable intensity, sepia tone, corner radius, and edge falloff.
+  - Use `radius` to control the inner corner rounding and `edgeFalloff` to control how far the vignette extends from the screen edges.
+
+    <img src="https://raw.githubusercontent.com/nukeolay/fancy_overlay/main/example/vignette.png" alt="Vignette" width="200"/>&nbsp;
+
 * Convenient API for Overlay Management
-  - Easily add, remove, and manage overlays with with `showFancyOverlay` and `removeFancyOverlay` *BuildContext* extensions.
+  - Easily add, remove, and manage overlays with `showFancyOverlay` and `removeFancyOverlay` *BuildContext* extensions.
   - Support for multiple simultaneous overlays without conflicts.
 
 ## Install

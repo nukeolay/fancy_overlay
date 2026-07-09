@@ -4,6 +4,7 @@ import 'package:example/pages/home.dart';
 import 'package:example/pages/vhs.dart';
 import 'package:example/pages/retro_pixel.dart';
 import 'package:example/pages/falling_widgets.dart';
+import 'package:example/pages/vignette.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +37,10 @@ class FancyOverlayExample extends StatelessWidget {
           case '/falling_widgets':
             return MaterialPageRoute(
               builder: (_) => const FallingWidgetsPage(),
+            );
+          case '/vignette':
+            return MaterialPageRoute(
+              builder: (_) => const VignettePage(),
             );
           default:
             return MaterialPageRoute(

@@ -46,6 +46,14 @@ class HomePage extends StatelessWidget {
                 'FallingWidgets Overlay',
               ),
             ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/vignette');
+              },
+              child: const Text(
+                'Vignette Overlay',
+              ),
+            ),
           ],
         ),
       ),

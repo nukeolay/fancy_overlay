@@ -107,7 +107,7 @@ class _RetroPixelationPainter extends CustomPainter {
             random.nextDouble() < config.glitchFrequency * animationValue;
         final color = isGlitch
             ? config.colorPalette[random.nextInt(config.colorPalette.length)]
-            : baseColor.withOpacity(config.opacity);
+            : baseColor.withValues(alpha: config.opacity);
 
         // Set pixel color with adjusted opacity
         pixelPaint.color = color;
