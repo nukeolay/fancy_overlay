@@ -1,4 +1,4 @@
-library fancy_overlay;
+library;
 
 export 'package:fancy_overlay/src/extension.dart';
 export 'package:fancy_overlay/src/overlays/export.dart';
