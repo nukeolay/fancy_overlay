@@ -6,7 +6,7 @@ Flutter package that provides a collection of stunning, customizable overlays to
 
 * FallingWidgetsOverlay()
   - Highly customizable snowfall animation or any other falling widgets.
-  - Control properties like vertical and horizaontal speed, scale, rotation, opacity, animation duration.
+  - Control properties like vertical and horizontal speed, scale, rotation, opacity, animation duration.
   - Perfect for adding a festive snowfall effect or any themed animation.
 
     <img src="https://raw.githubusercontent.com/nukeolay/fancy_overlay/main/example/falling_snow.gif" alt="Falling Snow" width="200"/>&nbsp;
