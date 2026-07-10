@@ -20,11 +20,11 @@ import 'package:fancy_overlay/fancy_overlay.dart';
 ///     ),
 ///   ],
 ///   numberOfWidgets: 100,
-///   positionStrategy = const FallingWidgetRandomPositionStrategy()
-///   minYSpeed: 0.5,
-///   maxYSpeed: 1.5,
-///   minXSpeed: -0.2,
-///   maxXSpeed: 0.2,
+///   positionStrategy: FallingWidgetRandomPositionStrategy(),
+///   minYSpeed: 30,
+///   maxYSpeed: 90,
+///   minXSpeed: -12,
+///   maxXSpeed: 12,
 ///   minScale: 0.5,
 ///   maxScale: 2.0,
 ///   rotationSpeed: 0.3,
@@ -43,8 +43,8 @@ class FallingWidgetsOverlayConfig {
     required this.children,
     this.numberOfWidgets = 200,
     this.positionStrategy = const FallingWidgetRandomPositionStrategy(),
-    this.minYSpeed = 0.5,
-    this.maxYSpeed = 1.0,
+    this.minYSpeed = 30,
+    this.maxYSpeed = 60,
     this.minXSpeed = 0,
     this.maxXSpeed = 0,
     this.minScale = 0.25,
@@ -66,19 +66,19 @@ class FallingWidgetsOverlayConfig {
   /// Defaults to [FallingWidgetRandomPositionStrategy].
   final FallingWidgetPositionStrategy positionStrategy;
 
-  /// The minimum vertical falling speed of the widgets.
-  /// Defaults to `0.5`.
+  /// The minimum vertical falling speed in logical pixels per second.
+  /// Defaults to `30`.
   final double minYSpeed;
 
-  /// The maximum vertical falling speed of the widgets.
-  /// Defaults to `1.0`.
+  /// The maximum vertical falling speed in logical pixels per second.
+  /// Defaults to `60`.
   final double maxYSpeed;
 
-  /// The minimum horizontal movement speed of the widgets.
+  /// The minimum horizontal movement speed in logical pixels per second.
   /// This allows widgets to drift left or right. Defaults to `0` (no movement).
   final double minXSpeed;
 
-  /// The maximum horizontal movement speed of the widgets.
+  /// The maximum horizontal movement speed in logical pixels per second.
   /// This allows widgets to drift left or right. Defaults to `0` (no movement).
   final double maxXSpeed;
 
@@ -92,7 +92,7 @@ class FallingWidgetsOverlayConfig {
   /// Defaults to `1.5`.
   final double maxScale;
 
-  /// The rotation speed of the widgets, controlling how fast they spin.
+  /// The rotation speed in radians per second, controlling how fast widgets spin.
   /// Defaults to `0.5`.
   final double rotationSpeed;
 

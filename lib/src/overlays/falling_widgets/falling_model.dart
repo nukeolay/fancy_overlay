@@ -72,11 +72,22 @@ class FallingModel {
   double x;
   double y;
   double rotation = 0.0;
+  Duration age = Duration.zero;
 
-  void updatePosition() {
-    y += ySpeed;
-    x += xSpeed;
-    rotation += rotationSpeed / 60.0;
+  void updatePosition(Duration elapsed) {
+    age += elapsed;
+    final seconds = elapsed.inMicroseconds / Duration.microsecondsPerSecond;
+    y += ySpeed * seconds;
+    x += xSpeed * seconds;
+    rotation += rotationSpeed * seconds;
+  }
+
+  double appearProgress(Duration duration) {
+    if (duration <= Duration.zero) {
+      return 1;
+    }
+
+    return (age.inMicroseconds / duration.inMicroseconds).clamp(0.0, 1.0);
   }
 
   bool get isOffScreen =>

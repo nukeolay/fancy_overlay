@@ -78,13 +78,13 @@ class _FallingWidgetsPageState extends State<FallingWidgetsPage> {
               ),
               Center(
                 child: Text(
-                  'Min Y Speed (${_config!.minYSpeed.toStringAsFixed(2)})',
+                  'Min Y Speed (${_config!.minYSpeed.toStringAsFixed(2)} px/s)',
                 ),
               ),
               Slider(
                 value: _config!.minYSpeed.toDouble(),
                 min: 0,
-                max: 20,
+                max: 512,
                 onChanged: (value) {
                   _config = _config?.copyWith(minYSpeed: value);
                   _updatedConfig(_config);
@@ -92,13 +92,13 @@ class _FallingWidgetsPageState extends State<FallingWidgetsPage> {
               ),
               Center(
                 child: Text(
-                  'Max Y Speed (${_config!.maxYSpeed.toStringAsFixed(2)})',
+                  'Max Y Speed (${_config!.maxYSpeed.toStringAsFixed(2)} px/s)',
                 ),
               ),
               Slider(
                 value: _config!.maxYSpeed.toDouble(),
                 min: 0,
-                max: 20,
+                max: 512,
                 onChanged: (value) {
                   _config = _config?.copyWith(maxYSpeed: value);
                   _updatedConfig(_config);
@@ -106,13 +106,13 @@ class _FallingWidgetsPageState extends State<FallingWidgetsPage> {
               ),
               Center(
                 child: Text(
-                  'Min X Speed (${_config!.minXSpeed.toStringAsFixed(2)})',
+                  'Min X Speed (${_config!.minXSpeed.toStringAsFixed(2)} px/s)',
                 ),
               ),
               Slider(
                 value: _config!.minXSpeed.toDouble(),
-                min: -10,
-                max: 10,
+                min: -512,
+                max: 512,
                 onChanged: (value) {
                   _config = _config?.copyWith(minXSpeed: value);
                   _updatedConfig(_config);
@@ -120,13 +120,13 @@ class _FallingWidgetsPageState extends State<FallingWidgetsPage> {
               ),
               Center(
                 child: Text(
-                  'Max X Speed (${_config!.maxXSpeed.toStringAsFixed(2)})',
+                  'Max X Speed (${_config!.maxXSpeed.toStringAsFixed(2)} px/s)',
                 ),
               ),
               Slider(
                 value: _config!.maxXSpeed.toDouble(),
-                min: -10,
-                max: 10,
+                min: -512,
+                max: 512,
                 onChanged: (value) {
                   _config = _config?.copyWith(maxXSpeed: value);
                   _updatedConfig(_config);
