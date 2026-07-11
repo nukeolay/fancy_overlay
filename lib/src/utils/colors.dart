@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 
+final _random = Random();
+
 class FancyColor {
   const FancyColor(this.color);
 
@@ -18,10 +20,10 @@ class FancyRandomColor implements FancyColor {
   @override
   Color get color {
     return Color.fromRGBO(
-      r ?? Random().nextInt(256),
-      g ?? Random().nextInt(256),
-      b ?? Random().nextInt(256),
-      opacity ?? Random().nextDouble(),
+      r ?? _random.nextInt(256),
+      g ?? _random.nextInt(256),
+      b ?? _random.nextInt(256),
+      opacity ?? _random.nextDouble(),
     );
   }
 }

@@ -101,7 +101,7 @@ class _VhsPainter extends CustomPainter {
 
     // Add random noise with random colors
     final random = Random();
-    for (int i = 0; i <= config.dotsNumber; i++) {
+    for (int i = 0; i < config.dotsNumber; i++) {
       final x = random.nextDouble() * size.width;
       final y = random.nextDouble() * size.height;
       paint.color = config.dotColor.color;
