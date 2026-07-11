@@ -1,1 +1,11 @@
+.DS_Store
+*.iml
+*.ipr
+*.iws
+.idea/
+.dart_tool/
+build/
+/pubspec.lock
+doc/api/
+docs/superpowers/
 example/*.gif

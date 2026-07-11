@@ -5,7 +5,7 @@ import 'package:fancy_overlay/src/overlays/falling_widgets/falling_widgets.dart'
 /// A widget that displays an animated overlay of falling widgets on the screen.
 ///
 /// The [FallingWidgetsOverlay] provides a visually appealing effect where
-/// specified widgets fall across the screen. It supports customization 
+/// specified widgets fall across the screen. It supports customization
 /// through the [FallingWidgetsOverlayConfig] class.
 ///
 /// This widget is useful for creating dynamic visual effects, such as falling
@@ -28,6 +28,7 @@ class FallingWidgetsOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    config.validate();
     return Material(
       clipBehavior: Clip.none,
       color: Colors.transparent,

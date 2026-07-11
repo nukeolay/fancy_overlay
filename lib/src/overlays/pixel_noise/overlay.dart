@@ -39,6 +39,7 @@ class _PixelNoiseOverlayState extends State<PixelNoiseOverlay>
 
   @override
   Widget build(BuildContext context) {
+    widget.config.validate();
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {

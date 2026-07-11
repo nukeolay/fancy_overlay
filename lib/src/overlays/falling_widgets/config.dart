@@ -105,6 +105,81 @@ class FallingWidgetsOverlayConfig {
   /// Defaults to `0.5`.
   final double opacity;
 
+  /// Validates values that are required by the falling-widget animation.
+  ///
+  /// Throws an [ArgumentError] in both debug and release builds when a value
+  /// would make the effect unsafe to animate.
+  void validate() {
+    if (children.isEmpty) {
+      throw ArgumentError.value(children, 'children', 'must not be empty');
+    }
+    if (numberOfWidgets < 0) {
+      throw ArgumentError.value(
+        numberOfWidgets,
+        'numberOfWidgets',
+        'must not be negative',
+      );
+    }
+
+    _validateFinite(minYSpeed, 'minYSpeed');
+    _validateFinite(maxYSpeed, 'maxYSpeed');
+    _validateFinite(minXSpeed, 'minXSpeed');
+    _validateFinite(maxXSpeed, 'maxXSpeed');
+    _validateFinite(minScale, 'minScale');
+    _validateFinite(maxScale, 'maxScale');
+    _validateFinite(rotationSpeed, 'rotationSpeed');
+    _validateFinite(opacity, 'opacity');
+
+    if (minYSpeed > maxYSpeed) {
+      throw ArgumentError.value(
+        minYSpeed,
+        'minYSpeed',
+        'must not be greater than maxYSpeed',
+      );
+    }
+    if (minXSpeed > maxXSpeed) {
+      throw ArgumentError.value(
+        minXSpeed,
+        'minXSpeed',
+        'must not be greater than maxXSpeed',
+      );
+    }
+    if (minScale < 0) {
+      throw ArgumentError.value(
+        minScale,
+        'minScale',
+        'must not be negative',
+      );
+    }
+    if (minScale > maxScale) {
+      throw ArgumentError.value(
+        minScale,
+        'minScale',
+        'must not be greater than maxScale',
+      );
+    }
+    if (opacity < 0 || opacity > 1) {
+      throw ArgumentError.value(
+        opacity,
+        'opacity',
+        'must be between zero and one',
+      );
+    }
+    if (appearDuration < Duration.zero) {
+      throw ArgumentError.value(
+        appearDuration,
+        'appearDuration',
+        'must not be negative',
+      );
+    }
+  }
+
+  static void _validateFinite(double value, String name) {
+    if (!value.isFinite) {
+      throw ArgumentError.value(value, name, 'must be finite');
+    }
+  }
+
   /// Returns a new configuration with updated values.
   ///
   /// This method allows you to copy an existing configuration and override specific
@@ -151,10 +226,23 @@ class FallingWidgetsOverlayConfig {
 /// - Random positions across the screen.
 /// - Starting at the top of the screen.
 ///
+/// Package users can also define a custom strategy:
+/// ```dart
+/// class FixedPositionStrategy extends FallingWidgetPositionStrategy {
+///   const FixedPositionStrategy();
+///
+///   @override
+///   double x(Size screenSize) => 12;
+///
+///   @override
+///   double y(Size screenSize) => 34;
+/// }
+/// ```
+///
 /// See the following implementations for specific behavior:
 /// - [FallingWidgetRandomPositionStrategy]
-/// - [FallingWidgetToPositionStrategy]
-sealed class FallingWidgetPositionStrategy {
+/// - [FallingWidgetTopPositionStrategy]
+abstract class FallingWidgetPositionStrategy {
   /// Creates a base instance of the initial position class.
   const FallingWidgetPositionStrategy();
 

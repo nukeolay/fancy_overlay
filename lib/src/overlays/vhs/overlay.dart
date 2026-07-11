@@ -64,6 +64,7 @@ class _VhsOverlayState extends State<VhsOverlay>
 
   @override
   Widget build(BuildContext context) {
+    widget.config.validate();
     Theme.of(context);
     return AnimatedBuilder(
       animation: _noiseAnimation,
@@ -134,7 +135,7 @@ class _VhsPainter extends CustomPainter {
         oldDelegate.config.dotSize != config.dotSize ||
         oldDelegate.config.dotsNumber != config.dotsNumber ||
         oldDelegate.config.animateScanlines != config.animateScanlines ||
-        oldDelegate.config.scanlineColor != config.scanlineColor || 
+        oldDelegate.config.scanlineColor != config.scanlineColor ||
         oldDelegate.config.dotColor != config.dotColor;
   }
 }

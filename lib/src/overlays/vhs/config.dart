@@ -65,6 +65,27 @@ class VhsOverlayConfig {
   /// Defaults to `false`.
   final bool animateScanlines;
 
+  /// Validates values that are required by the VHS painter.
+  ///
+  /// Throws an [ArgumentError] in both debug and release builds when a value
+  /// would make the effect unsafe to render.
+  void validate() {
+    if (!dotSize.isFinite || dotSize <= 0) {
+      throw ArgumentError.value(
+        dotSize,
+        'dotSize',
+        'must be finite and greater than zero',
+      );
+    }
+    if (dotsNumber < 0) {
+      throw ArgumentError.value(
+        dotsNumber,
+        'dotsNumber',
+        'must not be negative',
+      );
+    }
+  }
+
   /// Returns a new configuration with updated values.
   ///
   /// This method allows you to copy an existing configuration and override specific
