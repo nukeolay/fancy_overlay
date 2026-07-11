@@ -39,6 +39,20 @@ void main() async {
 }
 ```
 
+### PixelizeOverlay compatibility
+
+`PixelizeOverlay` uses `ImageFilter.shader`, which requires the Impeller
+rendering backend. Support is determined at runtime through
+`ImageFilter.isShaderFilterSupported`, so it depends on the active renderer
+rather than the operating system alone.
+
+When shader image filters are not supported, `PixelizeOverlay` falls back to a
+transparent full-size overlay: the backdrop remains unchanged and no
+`UnsupportedError` is thrown. In the same situation,
+`PixelizeOverlay.precacheShader()` completes without loading a shader program.
+See Flutter's [Impeller documentation](https://docs.flutter.dev/perf/impeller)
+for current platform availability and enablement instructions.
+
 * VignetteOverlay()
   - Add a soft perimeter vignette with configurable intensity, sepia tone, corner radius, and edge falloff.
   - Use `radius` to control the inner corner rounding and `edgeFalloff` to control how far the vignette extends from the screen edges.
@@ -56,7 +70,7 @@ In the `pubspec.yaml` of your flutter project, add the following dependency:
 
 ```yaml
 dependencies:
-  fancy_overlay: ^0.0.1
+  fancy_overlay: ^0.1.0
 ```
 
 In your library add the following import:
