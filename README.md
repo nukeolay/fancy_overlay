@@ -46,6 +46,7 @@ void main() async {
 * Convenient API for Overlay Management
   - Easily add, remove, and manage overlays with `showFancyOverlay` and `removeFancyOverlay` *BuildContext* extensions.
   - Support for multiple simultaneous overlays without conflicts.
+  - Each `Overlay` keeps one active instance of a runtime type; showing that type again replaces only its instance in the nearest `Overlay`.
 
 ## Install
 
