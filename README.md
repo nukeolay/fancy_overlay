@@ -27,6 +27,8 @@ Flutter package that provides a collection of stunning, customizable overlays to
   - Uses a shader-backed backdrop filter when the current renderer supports shader image filters.
   - Call `PixelizeOverlay.precacheShader()` before first use to reduce the first activation hitch.
 
+    <img src="https://raw.githubusercontent.com/nukeolay/fancy_overlay/main/example/pixelize.gif" alt="Pixelize" width="200"/>&nbsp;
+
 ```dart
 import 'dart:async';
 
