@@ -7,4 +7,5 @@
 build/
 /pubspec.lock
 doc/api/
+docs/
 example/*.gif

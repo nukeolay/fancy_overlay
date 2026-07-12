@@ -24,7 +24,7 @@ flutter:
 
 topics:
   - overlay
-  - fancy
   - effects
+  - pixelize
   - snowfall
-  - retro
+  - shaders
