@@ -17,27 +17,9 @@ Flutter package that provides a collection of stunning, customizable overlays to
   - Choose `VhsOverlayConfig.mild()`, `.balanced()`, or `.heavy()`, then use `copyWith` to tune individual signal controls.
   - Uses one shader image-filter pass when supported and automatically falls back to a portable painter approximation on other renderers.
   - Call `VhsOverlay.precacheShader()` before first use to reduce activation latency.
+  - Compatibility: True curvature, backdrop distortion, and RGB separation require `ImageFilter.isShaderFilterSupported`. On other renderers, `VhsOverlay` keeps its visual character with a portable fallback that draws animated scanlines, noise, tracking, flicker, and vignette. In the same situation, `VhsOverlay.precacheShader()` completes without loading a shader program.
   
     <img src="https://raw.githubusercontent.com/nukeolay/fancy_overlay/main/example/vhs.gif" alt="VHS" width="200"/>&nbsp;
-
-```dart
-context.showFancyOverlay(
-  VhsOverlay(
-    config: (const VhsOverlayConfig.heavy()).copyWith(
-      chromaAberration: 4,
-      flickerIntensity: 0.15,
-    ),
-  ),
-);
-```
-
-### VhsOverlay compatibility
-
-True curvature, backdrop distortion, and RGB separation require
-`ImageFilter.isShaderFilterSupported`. On other renderers, `VhsOverlay` keeps
-its visual character with a portable fallback that draws animated scanlines,
-noise, tracking, flicker, and vignette. In the same situation,
-`VhsOverlay.precacheShader()` completes without loading a shader program.
 
 * PixelNoiseOverlay()
   - Draw animated square pixel noise over your app with adjustable pixel sizes, color schemes, opacity, and noise frequency.
@@ -48,36 +30,9 @@ noise, tracking, flicker, and vignette. In the same situation,
   - Pixelate the already rendered backdrop behind the overlay with a configurable `pixelSize`.
   - Uses a shader-backed backdrop filter when the current renderer supports shader image filters.
   - Call `PixelizeOverlay.precacheShader()` before first use to reduce the first activation hitch.
+  - Compatibility: `PixelizeOverlay` uses `ImageFilter.shader`, which requires the Impeller rendering backend. Support is determined at runtime through `ImageFilter.isShaderFilterSupported`, so it depends on the active renderer rather than the operating system alone. When shader image filters are not supported, `PixelizeOverlay` falls back to a transparent full-size overlay: the backdrop remains unchanged and no `UnsupportedError` is thrown. In the same situation, `PixelizeOverlay.precacheShader()` completes without loading a shader program. See Flutter's [Impeller documentation](https://docs.flutter.dev/perf/impeller) for current platform availability and enablement instructions.
 
     <img src="https://raw.githubusercontent.com/nukeolay/fancy_overlay/main/example/pixelize.gif" alt="Pixelize" width="200"/>&nbsp;
-
-```dart
-import 'dart:async';
-
-import 'package:fancy_overlay/fancy_overlay.dart';
-import 'package:flutter/widgets.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  unawaited(PixelizeOverlay.precacheShader());
-  unawaited(VhsOverlay.precacheShader());
-  runApp(const MyApp());
-}
-```
-
-### PixelizeOverlay compatibility
-
-`PixelizeOverlay` uses `ImageFilter.shader`, which requires the Impeller
-rendering backend. Support is determined at runtime through
-`ImageFilter.isShaderFilterSupported`, so it depends on the active renderer
-rather than the operating system alone.
-
-When shader image filters are not supported, `PixelizeOverlay` falls back to a
-transparent full-size overlay: the backdrop remains unchanged and no
-`UnsupportedError` is thrown. In the same situation,
-`PixelizeOverlay.precacheShader()` completes without loading a shader program.
-See Flutter's [Impeller documentation](https://docs.flutter.dev/perf/impeller)
-for current platform availability and enablement instructions.
 
 * VignetteOverlay()
   - Add a soft perimeter vignette with configurable intensity, sepia tone, corner radius, and edge falloff.
@@ -89,21 +44,6 @@ for current platform availability and enablement instructions.
   - Easily add, remove, and manage overlays with `showFancyOverlay` and `removeFancyOverlay` *BuildContext* extensions.
   - Support for multiple simultaneous overlays without conflicts.
   - Each `Overlay` keeps one active instance of a runtime type; showing that type again replaces only its instance in the nearest `Overlay`.
-
-## Install
-
-In the `pubspec.yaml` of your flutter project, add the following dependency:
-
-```yaml
-dependencies:
-  fancy_overlay: ^0.1.0
-```
-
-In your library add the following import:
-
-```dart
-import 'package:fancy_overlay/fancy_overlay.dart';
-```
 
 ## BuildContext extension methods
 
