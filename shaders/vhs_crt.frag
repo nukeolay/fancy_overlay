@@ -84,7 +84,13 @@ void main() {
   float flicker = sin(u_time * 47.0) * 0.5 + 0.5;
   color *= 1.0 - flicker * u_flicker_intensity * 0.12;
 
-  float vignette = smoothstep(0.24, 1.05, radiusSquared);
+  vec2 vignetteAxes = abs(centered);
+  vec2 vignettePowers = pow(vignetteAxes, vec2(6.0));
+  float vignetteShape = pow(
+    vignettePowers.x + vignettePowers.y,
+    1.0 / 6.0
+  );
+  float vignette = smoothstep(0.55, 1.05, vignetteShape);
   color *= 1.0 - vignette * u_vignette_intensity * 0.82;
 
   float outside = step(1.0, max(abs(curved.x), abs(curved.y)));

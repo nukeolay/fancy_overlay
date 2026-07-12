@@ -195,15 +195,30 @@ class _VhsFallbackPainter extends CustomPainter {
       Paint()..color = Colors.black.withValues(alpha: flicker),
     );
 
-    final vignette = Paint()
-      ..shader = RadialGradient(
-        colors: [
-          Colors.transparent,
-          Colors.black.withValues(alpha: config.vignetteIntensity * 0.82),
-        ],
-        stops: const [0.55, 1],
-      ).createShader(Offset.zero & size);
-    canvas.drawRect(Offset.zero & size, vignette);
+    final rect = Offset.zero & size;
+    final edgeFalloff = size.shortestSide * 0.24;
+    final innerRect = rect.deflate(edgeFalloff * 0.6);
+    if (config.vignetteIntensity > 0 && !innerRect.isEmpty) {
+      final vignettePath = Path()
+        ..fillType = PathFillType.evenOdd
+        ..addRect(rect.inflate(edgeFalloff))
+        ..addRRect(
+          RRect.fromRectAndRadius(
+            innerRect,
+            Radius.circular(size.shortestSide * 0.12),
+          ),
+        );
+      final vignette = Paint()
+        ..color = Colors.black.withValues(
+          alpha: config.vignetteIntensity * 0.82,
+        )
+        ..maskFilter = MaskFilter.blur(BlurStyle.normal, edgeFalloff / 2);
+      canvas
+        ..save()
+        ..clipRect(rect)
+        ..drawPath(vignettePath, vignette)
+        ..restore();
+    }
   }
 
   @override
