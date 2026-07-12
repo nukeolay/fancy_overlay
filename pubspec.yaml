@@ -20,6 +20,7 @@ dev_dependencies:
 flutter:
   shaders:
     - shaders/pixelize.frag
+    - shaders/vhs_crt.frag
 
 topics:
   - overlay

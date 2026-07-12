@@ -13,9 +13,31 @@ Flutter package that provides a collection of stunning, customizable overlays to
     <img src="https://raw.githubusercontent.com/nukeolay/fancy_overlay/main/example/falling_stars.gif" alt="Falling Stars" width="200"/>&nbsp;
 
 * VhsOverlay()
-  - Add a retro VHS effect to your app with customizable glitch intensity, scanlines, and color distortion for a nostalgic experience.
+  - Applies a Heavy VHS-on-CRT backdrop effect with curvature, RGB separation, tracking distortion, procedural noise, scanlines, flicker, and vignette.
+  - Choose `VhsOverlayConfig.mild()`, `.balanced()`, or `.heavy()`, then use `copyWith` to tune individual signal controls.
+  - Uses one shader image-filter pass when supported and automatically falls back to a portable painter approximation on other renderers.
+  - Call `VhsOverlay.precacheShader()` before first use to reduce activation latency.
   
     <img src="https://raw.githubusercontent.com/nukeolay/fancy_overlay/main/example/vhs.gif" alt="VHS" width="200"/>&nbsp;
+
+```dart
+context.showFancyOverlay(
+  VhsOverlay(
+    config: (const VhsOverlayConfig.heavy()).copyWith(
+      chromaAberration: 4,
+      flickerIntensity: 0.15,
+    ),
+  ),
+);
+```
+
+### VhsOverlay compatibility
+
+True curvature, backdrop distortion, and RGB separation require
+`ImageFilter.isShaderFilterSupported`. On other renderers, `VhsOverlay` keeps
+its visual character with a portable fallback that draws animated scanlines,
+noise, tracking, flicker, and vignette. In the same situation,
+`VhsOverlay.precacheShader()` completes without loading a shader program.
 
 * PixelNoiseOverlay()
   - Draw animated square pixel noise over your app with adjustable pixel sizes, color schemes, opacity, and noise frequency.
@@ -32,9 +54,13 @@ Flutter package that provides a collection of stunning, customizable overlays to
 ```dart
 import 'dart:async';
 
+import 'package:fancy_overlay/fancy_overlay.dart';
+import 'package:flutter/widgets.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   unawaited(PixelizeOverlay.precacheShader());
+  unawaited(VhsOverlay.precacheShader());
   runApp(const MyApp());
 }
 ```

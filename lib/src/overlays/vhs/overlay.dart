@@ -1,40 +1,24 @@
+import 'dart:async';
 import 'dart:math';
+import 'dart:ui' as ui;
 
-import 'package:flutter/material.dart';
 import 'package:fancy_overlay/fancy_overlay.dart';
+import 'package:flutter/material.dart';
 
-/// A widget that simulates a VHS-style screen effect overlay.
-///
-/// The [VhsOverlay] replicates the aesthetic of old VHS recordings by introducing
-/// scanlines, random dots (simulating noise), and optional animations for scanlines.
-/// It can be used to add a nostalgic, vintage look to your application.
-///
-/// Example usage:
-/// ```dart
-/// VhsOverlay(
-///   config: VhsOverlayConfig(
-///     scanlineColor: FancyColor(Color.fromRGBO(255, 255, 255, 0.1)),
-///     dotColor: FancyRandomColor(),
-///     dotSize: 1.5,
-///     dotsNumber: 500,
-///     animateScanlines: true,
-///   ),
-/// );
-/// ```
-///
-/// See [VhsOverlayConfig] for a detailed explanation of configuration options.
+/// Applies a shader-backed Heavy VHS-on-CRT effect to the rendered backdrop.
 class VhsOverlay extends StatefulWidget {
-  /// Creates a [VhsOverlay] with the provided configuration.
-  ///
-  /// The [config] parameter is required and specifies the behavior and appearance
-  /// of the overlay.
+  /// Creates a VHS/CRT overlay with the Heavy preset by default.
   const VhsOverlay({
     this.config = const VhsOverlayConfig(),
     super.key,
   });
 
-  /// The configuration that determines the behavior and appearance of the
-  /// overlay.
+  /// Loads and caches the VHS/CRT shader before the overlay is shown.
+  static Future<void> precacheShader() async {
+    await _VhsShaderProgram.load();
+  }
+
+  /// Signal controls used by both the shader and portable fallback.
   final VhsOverlayConfig config;
 
   @override
@@ -43,36 +27,85 @@ class VhsOverlay extends StatefulWidget {
 
 class _VhsOverlayState extends State<VhsOverlay>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _noiseAnimation;
+  late final AnimationController _controller;
+  ui.FragmentShader? _shader;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(seconds: 10),
     )..repeat();
-    _noiseAnimation = Tween<double>(begin: 0, end: 1).animate(_controller);
+    unawaited(_loadShader());
+  }
+
+  @override
+  void didUpdateWidget(covariant VhsOverlay oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    widget.config.validate();
   }
 
   @override
   void dispose() {
+    _shader?.dispose();
     _controller.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadShader() async {
+    final program = await _VhsShaderProgram.load();
+    if (!mounted || program == null) return;
+
+    _shader?.dispose();
+    _shader = program.fragmentShader();
+    setState(() {});
+  }
+
+  void _updateUniforms(double time, double devicePixelRatio) {
+    final shader = _shader;
+    if (shader == null) return;
+
+    final config = widget.config;
+    shader
+      ..setFloat(2, time)
+      ..setFloat(3, config.scanlineIntensity)
+      ..setFloat(4, config.noiseIntensity)
+      ..setFloat(5, config.chromaAberration)
+      ..setFloat(6, config.trackingIntensity)
+      ..setFloat(7, config.distortionIntensity)
+      ..setFloat(8, config.curvature)
+      ..setFloat(9, config.vignetteIntensity)
+      ..setFloat(10, config.flickerIntensity)
+      ..setFloat(11, devicePixelRatio);
   }
 
   @override
   Widget build(BuildContext context) {
     widget.config.validate();
-    Theme.of(context);
+    final mediaQuery = MediaQuery.of(context);
+
     return AnimatedBuilder(
-      animation: _noiseAnimation,
+      animation: _controller,
       builder: (context, child) {
-        return CustomPaint(
-          painter: _VhsPainter(
-            animationValue: _noiseAnimation.value,
-            config: widget.config,
+        final time = _controller.value * 10;
+        final shader = _shader;
+        if (!ui.ImageFilter.isShaderFilterSupported || shader == null) {
+          return CustomPaint(
+            painter: _VhsFallbackPainter(
+              config: widget.config,
+              time: time,
+            ),
+            size: mediaQuery.size,
+          );
+        }
+
+        _updateUniforms(time, mediaQuery.devicePixelRatio);
+        return BackdropFilter(
+          filter: ui.ImageFilter.shader(shader),
+          child: CustomPaint(
+            painter: const _VhsCoveragePainter(),
+            size: mediaQuery.size,
           ),
         );
       },
@@ -80,62 +113,116 @@ class _VhsOverlayState extends State<VhsOverlay>
   }
 }
 
-class _VhsPainter extends CustomPainter {
-  const _VhsPainter({
-    required this.animationValue,
+class _VhsShaderProgram {
+  static ui.FragmentProgram? _program;
+  static Future<ui.FragmentProgram?>? _loading;
+
+  static Future<ui.FragmentProgram?> load() {
+    if (!ui.ImageFilter.isShaderFilterSupported) {
+      return Future.value();
+    }
+    final program = _program;
+    if (program != null) return Future.value(program);
+
+    _loading ??= ui.FragmentProgram.fromAsset(
+      'packages/fancy_overlay/shaders/vhs_crt.frag',
+    ).then((program) {
+      _program = program;
+      return program;
+    }).whenComplete(() {
+      _loading = null;
+    });
+    return _loading!;
+  }
+}
+
+class _VhsFallbackPainter extends CustomPainter {
+  const _VhsFallbackPainter({
     required this.config,
+    required this.time,
   });
 
-  final double animationValue;
   final VhsOverlayConfig config;
+  final double time;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint();
-
-    // Add scanlines
+    final scanlinePaint = Paint()
+      ..color = Colors.black.withValues(
+        alpha: config.scanlineIntensity * 0.42,
+      );
     for (double y = 0; y < size.height; y += 4) {
-      paint.color = config.scanlineColor.color;
-      canvas.drawRect(Rect.fromLTWH(0, y, size.width, 1), paint);
+      canvas.drawRect(Rect.fromLTWH(0, y, size.width, 1), scanlinePaint);
     }
 
-    // Add random noise with random colors
-    final random = Random();
-    for (int i = 0; i < config.dotsNumber; i++) {
-      final x = random.nextDouble() * size.width;
-      final y = random.nextDouble() * size.height;
-      paint.color = config.dotColor.color;
+    final frame = (time * 30).floor();
+    final random = Random(frame);
+    final noiseCount = min(
+      1200,
+      (size.width * size.height / 1800 * config.noiseIntensity).round(),
+    );
+    final noisePaint = Paint();
+    for (var index = 0; index < noiseCount; index++) {
+      noisePaint.color = Colors.white.withValues(
+        alpha: random.nextDouble() * config.noiseIntensity * 0.35,
+      );
       canvas.drawRect(
-        Rect.fromPoints(
-          Offset(x, y),
-          Offset(x + config.dotSize, y + config.dotSize),
+        Rect.fromLTWH(
+          random.nextDouble() * size.width,
+          random.nextDouble() * size.height,
+          1 + random.nextDouble() * 2,
+          1 + random.nextDouble() * 2,
         ),
-        paint,
+        noisePaint,
       );
     }
-    if (config.animateScanlines) {
-      final scanlinesPaint = Paint()..color = config.scanlineColor.color;
-      for (double y = 0; y < size.height; y += config.dotSize * 4) {
-        canvas.drawRect(
-          Rect.fromLTWH(
-            0,
-            y + sin(animationValue * pi * 2 + y * 0.1) * 2,
-            size.width,
-            1,
-          ),
-          scanlinesPaint,
-        );
-      }
-    }
+
+    final trackingY = (time * 0.11 % 1) * size.height;
+    final trackingPaint = Paint()
+      ..color = Colors.white.withValues(
+        alpha: config.trackingIntensity * 0.18,
+      )
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 5);
+    canvas.drawRect(
+      Rect.fromLTWH(0, trackingY - 12, size.width, 24),
+      trackingPaint,
+    );
+
+    final flicker =
+        (sin(time * 47) * 0.5 + 0.5) * config.flickerIntensity * 0.1;
+    canvas.drawRect(
+      Offset.zero & size,
+      Paint()..color = Colors.black.withValues(alpha: flicker),
+    );
+
+    final vignette = Paint()
+      ..shader = RadialGradient(
+        colors: [
+          Colors.transparent,
+          Colors.black.withValues(alpha: config.vignetteIntensity * 0.82),
+        ],
+        stops: const [0.55, 1],
+      ).createShader(Offset.zero & size);
+    canvas.drawRect(Offset.zero & size, vignette);
   }
 
   @override
-  bool shouldRepaint(covariant _VhsPainter oldDelegate) {
-    return oldDelegate.animationValue != animationValue ||
-        oldDelegate.config.dotSize != config.dotSize ||
-        oldDelegate.config.dotsNumber != config.dotsNumber ||
-        oldDelegate.config.animateScanlines != config.animateScanlines ||
-        oldDelegate.config.scanlineColor != config.scanlineColor ||
-        oldDelegate.config.dotColor != config.dotColor;
+  bool shouldRepaint(covariant _VhsFallbackPainter oldDelegate) {
+    return oldDelegate.time != time || oldDelegate.config != config;
   }
+}
+
+class _VhsCoveragePainter extends CustomPainter {
+  const _VhsCoveragePainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawRect(
+      Offset.zero & size,
+      Paint()..color = const Color.fromARGB(1, 0, 0, 0),
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _VhsCoveragePainter oldDelegate) => false;
 }

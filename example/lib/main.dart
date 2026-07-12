@@ -14,8 +14,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
-  // Preload the shader so the first PixelizeOverlay activation does less work.
+  // Preload shaders so the first shader-backed overlay activation does less work.
   unawaited(PixelizeOverlay.precacheShader());
+  unawaited(VhsOverlay.precacheShader());
 
   runApp(const FancyOverlayExample());
 }

@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:fancy_overlay/fancy_overlay.dart';
-import 'package:example/widgets/fancy_color_slider.dart';
+import 'package:flutter/material.dart';
 
 class VhsPage extends StatefulWidget {
   const VhsPage({super.key});
@@ -17,25 +16,39 @@ class _VhsPageState extends State<VhsPage> {
     super.didChangeDependencies();
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-        _config = const VhsOverlayConfig();
-        context.showFancyOverlay(
-          VhsOverlay(config: _config!),
-        );
-        setState(() {});
+        _updatedConfig(const VhsOverlayConfig());
       },
     );
   }
 
-  void _updatedConfig(VhsOverlayConfig? config) {
-    if (config == null) return;
-    context.showFancyOverlay(
-      VhsOverlay(config: config),
-    );
+  void _updatedConfig(VhsOverlayConfig config) {
+    _config = config;
+    context.showFancyOverlay(VhsOverlay(config: config));
     setState(() {});
+  }
+
+  Widget _slider({
+    required String label,
+    required double value,
+    required double max,
+    required ValueChanged<double> onChanged,
+  }) {
+    return Column(
+      children: [
+        Text('$label (${value.toStringAsFixed(2)})'),
+        Slider(
+          value: value,
+          min: 0,
+          max: max,
+          onChanged: onChanged,
+        ),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final config = _config;
     return Scaffold(
       appBar: AppBar(
         title: const Text('VhsOverlay'),
@@ -48,70 +61,96 @@ class _VhsPageState extends State<VhsPage> {
           ),
         ],
       ),
-      body: Center(
-        child: ListView(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          children: [
-            if (_config != null) ...[
-              Center(
-                child: Text(
-                  'Dot size (${_config!.dotSize.toStringAsFixed(2)})',
-                ),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        children: [
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 8,
+            children: [
+              OutlinedButton(
+                onPressed: () => _updatedConfig(const VhsOverlayConfig.mild()),
+                child: const Text('Mild'),
               ),
-              Slider(
-                value: _config!.dotSize,
-                min: 0,
-                max: 100,
-                onChanged: (value) {
-                  _config = _config?.copyWith(dotSize: value);
-                  _updatedConfig(_config);
-                },
+              OutlinedButton(
+                onPressed: () =>
+                    _updatedConfig(const VhsOverlayConfig.balanced()),
+                child: const Text('Balanced'),
               ),
-              Center(
-                child: Text(
-                  'Dots number (${_config!.dotsNumber})',
-                ),
-              ),
-              Slider(
-                value: _config!.dotsNumber.toDouble(),
-                min: 0,
-                max: 1000,
-                onChanged: (value) {
-                  _config = _config?.copyWith(dotsNumber: value.toInt());
-                  _updatedConfig(_config);
-                },
-              ),
-              FancyColorSlider(
-                label: 'Dot color',
-                color: _config!.dotColor,
-                onColorUpdate: (color) {
-                  _config = _config?.copyWith(dotColor: color);
-                  _updatedConfig(_config);
-                },
-              ),
-              FancyColorSlider(
-                label: 'Scanline color',
-                color: _config!.scanlineColor,
-                onColorUpdate: (color) {
-                  _config = _config?.copyWith(scanlineColor: color);
-                  _updatedConfig(_config);
-                },
-              ),
-              const Center(
-                child: Text(
-                  'Animate Scanlines',
-                ),
-              ),
-              Switch(
-                value: _config!.animateScanlines,
-                onChanged: (value) {
-                  _config = _config?.copyWith(animateScanlines: value);
-                  _updatedConfig(_config);
-                },
+              OutlinedButton(
+                onPressed: () => _updatedConfig(const VhsOverlayConfig.heavy()),
+                child: const Text('Heavy'),
               ),
             ],
+          ),
+          const SizedBox(height: 16),
+          if (config != null) ...[
+            _slider(
+              label: 'Scanline intensity',
+              value: config.scanlineIntensity,
+              max: 1,
+              onChanged: (value) => _updatedConfig(
+                config.copyWith(scanlineIntensity: value),
+              ),
+            ),
+            _slider(
+              label: 'Noise intensity',
+              value: config.noiseIntensity,
+              max: 1,
+              onChanged: (value) => _updatedConfig(
+                config.copyWith(noiseIntensity: value),
+              ),
+            ),
+            _slider(
+              label: 'Chroma aberration',
+              value: config.chromaAberration,
+              max: 8,
+              onChanged: (value) => _updatedConfig(
+                config.copyWith(chromaAberration: value),
+              ),
+            ),
+            _slider(
+              label: 'Tracking intensity',
+              value: config.trackingIntensity,
+              max: 1,
+              onChanged: (value) => _updatedConfig(
+                config.copyWith(trackingIntensity: value),
+              ),
+            ),
+            _slider(
+              label: 'Distortion intensity',
+              value: config.distortionIntensity,
+              max: 1,
+              onChanged: (value) => _updatedConfig(
+                config.copyWith(distortionIntensity: value),
+              ),
+            ),
+            _slider(
+              label: 'Curvature',
+              value: config.curvature,
+              max: 1,
+              onChanged: (value) => _updatedConfig(
+                config.copyWith(curvature: value),
+              ),
+            ),
+            _slider(
+              label: 'Vignette intensity',
+              value: config.vignetteIntensity,
+              max: 1,
+              onChanged: (value) => _updatedConfig(
+                config.copyWith(vignetteIntensity: value),
+              ),
+            ),
+            _slider(
+              label: 'Flicker intensity',
+              value: config.flickerIntensity,
+              max: 1,
+              onChanged: (value) => _updatedConfig(
+                config.copyWith(flickerIntensity: value),
+              ),
+            ),
           ],
-        ),
+        ],
       ),
     );
   }

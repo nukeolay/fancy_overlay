@@ -1,108 +1,124 @@
-import 'dart:ui';
-
 import 'package:fancy_overlay/fancy_overlay.dart';
 
-/// Configuration class for the [VhsOverlay].
-///
-/// This class provides options to customize the appearance and behavior of the
-/// VHS overlay effect, including scanline color, dot size, number of dots, and
-/// optional animation for scanlines.
-///
-/// Example usage:
-/// ```dart
-/// final config = VhsOverlayConfig(
-///   scanlineColor: FancyColor(Colors.grey),
-///   dotColor: FancyRandomColor(),
-///   dotSize: 2,
-///   dotsNumber: 300,
-///   animateScanlines: false,
-/// );
-/// ```
+/// Configuration for the shader-backed [VhsOverlay].
 class VhsOverlayConfig {
-  /// Creates a configuration for the [VhsOverlay].
-  ///
-  /// The default configuration uses:
-  /// - `scanlineColor`: Semi-transparent gray.
-  /// - `dotColor`: Random colors.
-  /// - `dotSize`: 2.
-  /// - `dotsNumber`: 300.
-  /// - `animateScanlines`: `false`.
+  /// Creates the Heavy VHS-on-CRT configuration used by default.
   const VhsOverlayConfig({
-    this.scanlineColor = const FancyColor(
-      Color.fromRGBO(150, 150, 150, 0.2),
-    ),
-    this.dotColor = const FancyRandomColor(),
-    this.dotSize = 2,
-    this.dotsNumber = 300,
-    this.animateScanlines = false,
+    this.scanlineIntensity = 0.55,
+    this.noiseIntensity = 0.35,
+    this.chromaAberration = 2.5,
+    this.trackingIntensity = 0.45,
+    this.distortionIntensity = 0.25,
+    this.curvature = 0.08,
+    this.vignetteIntensity = 0.55,
+    this.flickerIntensity = 0.08,
   });
 
-  /// The color of the horizontal scanlines.
-  ///
-  /// Defaults to a semi-transparent gray (`Color.fromRGBO(150, 150, 150, 0.2)`).
-  final FancyColor scanlineColor;
+  /// Creates a subtle treatment suitable for content-heavy screens.
+  const VhsOverlayConfig.mild()
+      : this(
+          scanlineIntensity: 0.18,
+          noiseIntensity: 0.06,
+          chromaAberration: 0.8,
+          trackingIntensity: 0.12,
+          distortionIntensity: 0.08,
+          curvature: 0.025,
+          vignetteIntensity: 0.22,
+          flickerIntensity: 0.02,
+        );
 
-  /// The color of the random dots simulating noise.
-  ///
-  /// Defaults to [FancyRandomColor], which generates random colors for the dots.
-  final FancyColor dotColor;
+  /// Creates a visible effect that keeps ordinary UI readable.
+  const VhsOverlayConfig.balanced()
+      : this(
+          scanlineIntensity: 0.35,
+          noiseIntensity: 0.18,
+          chromaAberration: 1.5,
+          trackingIntensity: 0.28,
+          distortionIntensity: 0.16,
+          curvature: 0.05,
+          vignetteIntensity: 0.38,
+          flickerIntensity: 0.05,
+        );
 
-  /// The size of the dots in the overlay.
-  ///
-  /// Larger values create bigger dots, while smaller values result in finer noise.
-  /// Defaults to `2.0`.
-  final double dotSize;
+  /// Creates the same Heavy treatment as the unnamed constructor.
+  const VhsOverlayConfig.heavy() : this();
 
-  /// The number of dots rendered in the overlay.
-  ///
-  /// Higher values increase the density of the noise, while lower values make
-  /// the overlay appear less cluttered. Defaults to `300`.
-  final int dotsNumber;
+  /// Strength of the dark horizontal scanline modulation.
+  final double scanlineIntensity;
 
-  /// Whether the scanlines should animate.
-  ///
-  /// If set to `true`, the scanlines will move to simulate the VHS playback effect.
-  /// Defaults to `false`.
-  final bool animateScanlines;
+  /// Strength of the time-varying tape noise.
+  final double noiseIntensity;
 
-  /// Validates values that are required by the VHS painter.
-  ///
-  /// Throws an [ArgumentError] in both debug and release builds when a value
-  /// would make the effect unsafe to render.
+  /// RGB channel displacement in logical pixels.
+  final double chromaAberration;
+
+  /// Strength of the localized moving tracking band.
+  final double trackingIntensity;
+
+  /// Strength of the global horizontal signal distortion.
+  final double distortionIntensity;
+
+  /// Strength of the CRT coordinate curvature.
+  final double curvature;
+
+  /// Strength of the dark CRT edge vignette.
+  final double vignetteIntensity;
+
+  /// Strength of the animated brightness variation.
+  final double flickerIntensity;
+
+  /// Throws [ArgumentError] when a shader uniform is unsafe.
   void validate() {
-    if (!dotSize.isFinite || dotSize <= 0) {
+    _validateUnitInterval(scanlineIntensity, 'scanlineIntensity');
+    _validateUnitInterval(noiseIntensity, 'noiseIntensity');
+    _validateNonNegative(chromaAberration, 'chromaAberration');
+    _validateUnitInterval(trackingIntensity, 'trackingIntensity');
+    _validateUnitInterval(distortionIntensity, 'distortionIntensity');
+    _validateUnitInterval(curvature, 'curvature');
+    _validateUnitInterval(vignetteIntensity, 'vignetteIntensity');
+    _validateUnitInterval(flickerIntensity, 'flickerIntensity');
+  }
+
+  static void _validateUnitInterval(double value, String name) {
+    if (!value.isFinite || value < 0 || value > 1) {
       throw ArgumentError.value(
-        dotSize,
-        'dotSize',
-        'must be finite and greater than zero',
-      );
-    }
-    if (dotsNumber < 0) {
-      throw ArgumentError.value(
-        dotsNumber,
-        'dotsNumber',
-        'must not be negative',
+        value,
+        name,
+        'must be finite and between zero and one',
       );
     }
   }
 
-  /// Returns a new configuration with updated values.
-  ///
-  /// This method allows you to copy an existing configuration and override specific
-  /// values while keeping the others unchanged.
+  static void _validateNonNegative(double value, String name) {
+    if (!value.isFinite || value < 0) {
+      throw ArgumentError.value(
+        value,
+        name,
+        'must be finite and non-negative',
+      );
+    }
+  }
+
+  /// Returns a copy with selected signal controls replaced.
   VhsOverlayConfig copyWith({
-    FancyColor? scanlineColor,
-    FancyColor? dotColor,
-    double? dotSize,
-    int? dotsNumber,
-    bool? animateScanlines,
+    double? scanlineIntensity,
+    double? noiseIntensity,
+    double? chromaAberration,
+    double? trackingIntensity,
+    double? distortionIntensity,
+    double? curvature,
+    double? vignetteIntensity,
+    double? flickerIntensity,
   }) {
     return VhsOverlayConfig(
-      scanlineColor: scanlineColor ?? this.scanlineColor,
-      dotColor: dotColor ?? this.dotColor,
-      dotSize: dotSize ?? this.dotSize,
-      dotsNumber: dotsNumber ?? this.dotsNumber,
-      animateScanlines: animateScanlines ?? this.animateScanlines,
+      scanlineIntensity: scanlineIntensity ?? this.scanlineIntensity,
+      noiseIntensity: noiseIntensity ?? this.noiseIntensity,
+      chromaAberration: chromaAberration ?? this.chromaAberration,
+      trackingIntensity: trackingIntensity ?? this.trackingIntensity,
+      distortionIntensity: distortionIntensity ?? this.distortionIntensity,
+      curvature: curvature ?? this.curvature,
+      vignetteIntensity: vignetteIntensity ?? this.vignetteIntensity,
+      flickerIntensity: flickerIntensity ?? this.flickerIntensity,
     );
   }
 }
