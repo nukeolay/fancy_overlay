@@ -18,52 +18,69 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/vhs');
-              },
-              child: const Text(
-                'VHS Overlay',
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/liquid_distortion');
+                      },
+                      child: const Text(
+                        'Liquid Distortion Overlay',
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/vhs');
+                      },
+                      child: const Text(
+                        'VHS Overlay',
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/pixel_noise');
+                      },
+                      child: const Text(
+                        'PixelNoise Overlay',
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/pixelize');
+                      },
+                      child: const Text(
+                        'Pixelize Overlay',
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/falling_widgets');
+                      },
+                      child: const Text(
+                        'FallingWidgets Overlay',
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/vignette');
+                      },
+                      child: const Text(
+                        'Vignette Overlay',
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/pixel_noise');
-              },
-              child: const Text(
-                'PixelNoise Overlay',
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/pixelize');
-              },
-              child: const Text(
-                'Pixelize Overlay',
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/falling_widgets');
-              },
-              child: const Text(
-                'FallingWidgets Overlay',
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/vignette');
-              },
-              child: const Text(
-                'Vignette Overlay',
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

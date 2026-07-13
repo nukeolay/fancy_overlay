@@ -12,6 +12,15 @@ Flutter package that provides a collection of stunning, customizable overlays to
     <img src="https://raw.githubusercontent.com/nukeolay/fancy_overlay/main/example/falling_snow.gif" alt="Falling Snow" width="200"/>&nbsp;
     <img src="https://raw.githubusercontent.com/nukeolay/fancy_overlay/main/example/falling_stars.gif" alt="Falling Stars" width="200"/>&nbsp;
 
+* LiquidDistortionOverlay()
+  - Refracts the rendered backdrop as slow, organic Liquid Glass with configurable distortion strength, wave scale, speed, drift direction, and chromatic aberration.
+  - Choose `LiquidDistortionOverlayConfig.mild()`, `.balanced()`, or `.heavy()`, then use `copyWith` to tune individual controls.
+  - Uses one shader image-filter pass when supported and a deterministic caustic-highlight painter fallback on other renderers.
+  - Call `LiquidDistortionOverlay.precacheShader()` before first use to reduce activation latency.
+  - Compatibility: True backdrop refraction and chromatic separation require `ImageFilter.isShaderFilterSupported`. Other renderers draw animated caustic highlights and a subtle liquid tint without displacing the backdrop. In the same situation, `LiquidDistortionOverlay.precacheShader()` completes without loading a shader program.
+
+    <img src="https://raw.githubusercontent.com/nukeolay/fancy_overlay/main/example/liquid_distortion.gif" alt="Liquid Distortion" width="200"/>&nbsp;
+
 * VhsOverlay()
   - Applies a Heavy VHS-on-CRT backdrop effect with curvature, RGB separation, tracking distortion, procedural noise, scanlines, flicker, and vignette.
   - Choose `VhsOverlayConfig.mild()`, `.balanced()`, or `.heavy()`, then use `copyWith` to tune individual signal controls.

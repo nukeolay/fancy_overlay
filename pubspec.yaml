@@ -1,6 +1,6 @@
 name: fancy_overlay
 description: "A Flutter package that provides a collection of stunning, customizable overlays to enhance your app's visual appeal."
-version: 0.1.1
+version: 0.1.2
 homepage: https://github.com/nukeolay/fancy_overlay
 repository: https://github.com/nukeolay/fancy_overlay
 
@@ -21,6 +21,7 @@ flutter:
   shaders:
     - shaders/pixelize.frag
     - shaders/vhs_crt.frag
+    - shaders/liquid_distortion.frag
 
 topics:
   - overlay
