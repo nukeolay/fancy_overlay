@@ -4,6 +4,7 @@ import 'package:fancy_overlay/fancy_overlay.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:example/pages/home.dart';
+import 'package:example/pages/liquid_distortion.dart';
 import 'package:example/pages/vhs.dart';
 import 'package:example/pages/pixel_noise.dart';
 import 'package:example/pages/pixelize.dart';
@@ -15,6 +16,7 @@ void main() async {
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
   // Preload shaders so the first shader-backed overlay activation does less work.
+  unawaited(LiquidDistortionOverlay.precacheShader());
   unawaited(PixelizeOverlay.precacheShader());
   unawaited(VhsOverlay.precacheShader());
 
@@ -35,6 +37,10 @@ class FancyOverlayExample extends StatelessWidget {
       ),
       onGenerateRoute: (settings) {
         switch (settings.name) {
+          case '/liquid_distortion':
+            return MaterialPageRoute(
+              builder: (_) => const LiquidDistortionPage(),
+            );
           case '/vhs':
             return MaterialPageRoute(
               builder: (_) => const VhsPage(),
